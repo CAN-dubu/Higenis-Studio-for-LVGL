@@ -85,6 +85,7 @@ void rebuildNow() {
     buildTrace();
     if (g.sel && !findWidget(curScreen(), g.sel)) g.sel = 0;
     lvhost::setView(wantView());
+    lvhost::setMotionTime(g.motionT);
     lvhost::build(g.doc, g.screen, g.sel, g.editState);
     g.issues = runLint(g.doc, curScreen(), lvhost::coords());
     if (lvhost::takeFrame()) uploadCanvas();
@@ -186,6 +187,7 @@ void switchScreen(int i) {
     flushLive();
     g.prevScreen = g.screen;
     g.screen = i;
+    g.motionT = -1;
     g.sel = 0;
     g.editState = ST_DEFAULT;
     g.needsBuild = true;
@@ -1108,6 +1110,190 @@ static bool symbolPick(const char* id, std::string* text) {
 
 static double luma(int c) { return 0.2126 * (c >> 16 & 255) + 0.7152 * (c >> 8 & 255) + 0.0722 * (c & 255); }
 
+// 움직임: 시트가 뜰 때 부품이 움직이는 순서. 도면은 움직임 없이 놓인 모습이고 시운전과 내보낸 코드에서 움직인다
+static void drawMotions(Widget& w, float W) {
+    ImDrawList* dl = ImGui::GetWindowDrawList();
+    char b[128];
+    int remove = -1;
+    const float ind = px(24), iw = W - ind;
+    auto indent = [&] { ImGui::SetCursorScreenPos(ImGui::GetCursorScreenPos() + ImVec2(ind, 0)); };
+    for (int k = 0; k < (int)w.motions.size(); k++) {
+        Motion& m = w.motions[k];
+        const MotionInfo& mi = motionInfo(m.kind);
+        ImGui::PushID(5000 + k);
+        ImVec2 rp = ImGui::GetCursorScreenPos();
+        snprintf(b, sizeof b, "%d.", k + 1);
+        textAt(dl, F.mono, 13, rp + ImVec2(0, px(5)), col::red, b);
+        ImGui::SetCursorScreenPos(rp + ImVec2(ind, 0));
+        pushFont(F.ui, 15);
+        if (comboField("##kind", mi.ko, iw - px(26))) {
+            for (int c = 0; c < MO_COUNT; c++) {
+                if (!motionApplies(c, w.type)) continue;
+                const MotionInfo& ci = motionInfo(c);
+                snprintf(b, sizeof b, "%s  · %s", ci.ko, ci.enter ? "들어오기" : ci.exit ? "나가기" : "되풀이");
+                if (ImGui::Selectable(b, c == m.kind) && c != m.kind) {
+                    Motion nm = defaultMotion(c);
+                    nm.delay = m.delay;
+                    m = nm;
+                    commit(w.name + " 움직임 " + ci.ko);
+                }
+            }
+            ImGui::EndCombo();
+        }
+        ImGui::PopFont();
+        ImGui::SameLine(0, px(4));
+        ImVec2 xp = ImGui::GetCursorScreenPos();
+        if (ImGui::InvisibleButton("##del", ImVec2(px(22), px(26)))) remove = k;
+        const bool dh = ImGui::IsItemHovered();
+        const ImVec2 c = xp + ImVec2(px(11), px(13));
+        const float kk = px(3.5f);
+        dl->AddLine(c - ImVec2(kk, kk), c + ImVec2(kk, kk), dh ? col::red : col::ink3, 1.2f);
+        dl->AddLine(c + ImVec2(-kk, kk), c + ImVec2(kk, -kk), dh ? col::red : col::ink3, 1.2f);
+        if (dh) tooltip("움직임 삭제");
+
+        const float hw = (iw - px(12)) * 0.5f;
+        indent();
+        int r1 = scrubInt("##delay", "시작 ms", &m.delay, 0, 600000, hw);
+        ImGui::SameLine(0, px(12));
+        int r2 = scrubInt("##dur", "길이 ms", &m.dur, 1, 60000, hw);
+        handleField(std::max(r1, r2), w.name + " 움직임 시간");
+
+        indent();
+        {
+            ImVec2 gp = ImGui::GetCursorScreenPos();
+            textAt(dl, F.ui, 14, gp + ImVec2(0, px(4)), col::ink3, "느낌");
+            ImGui::SetCursorScreenPos(gp + ImVec2(px(38), 0));
+            pushFont(F.ui, 15);
+            if (comboField("##ease", motionEaseKo(m.ease), iw - px(38))) {
+                for (int e = 0; e < ME_COUNT; e++)
+                    if (ImGui::Selectable(motionEaseKo(e), e == m.ease) && e != m.ease) { m.ease = e; commit(w.name + " 움직임 " + motionEaseKo(e)); }
+                ImGui::EndCombo();
+            }
+            ImGui::PopFont();
+        }
+        if (mi.usesDir) {
+            indent();
+            ImVec2 gp = ImGui::GetCursorScreenPos();
+            textAt(dl, F.ui, 14, gp + ImVec2(0, px(4)), col::ink3, m.kind == MO_SLIDE_OUT ? "어디로" : m.kind == MO_WIPE ? "어디부터" : "어디서");
+            ImGui::SetCursorScreenPos(gp + ImVec2(px(58), 0));
+            const char* dirs[4] = {"왼쪽", "오른쪽", "위", "아래"};
+            int dsel = m.dir;
+            if (segTabs("##dir", dirs, 4, &dsel) && dsel != m.dir) { m.dir = dsel; commit(w.name + " 움직임 " + motionDirKo(m.kind, dsel)); }
+        }
+        if (mi.amountKo) {
+            indent();
+            handleField(scrubInt("##amt", mi.amountKo, &m.amount, mi.amountMin, mi.amountMax, hw), w.name + " 움직임 " + mi.amountKo);
+            ImGui::SameLine(0, px(12));
+        } else indent();
+        {
+            ImVec2 gp = ImGui::GetCursorScreenPos();
+            if (toggleField("##rep", &m.repeat)) commit(w.name + (m.repeat ? " 움직임 되풀이" : " 움직임 한 번"));
+            textAt(dl, F.ui, 14, gp + ImVec2(px(40), px(4)), m.repeat ? col::ink : col::ink3, "되풀이");
+        }
+        gap(8);
+        ImGui::PopID();
+    }
+    if (remove >= 0) { w.motions.erase(w.motions.begin() + remove); commit(w.name + " 움직임 삭제"); }
+    if (textLink("+ 움직임 추가")) {
+        int end = 0;
+        for (auto& m : w.motions) end = std::max(end, motionEnd(m));
+        Motion nm = defaultMotion(w.motions.empty() ? MO_FADE_IN : MO_FADE_OUT);
+        nm.delay = w.motions.empty() ? 0 : end + 1500;   // 두 번째부터는 잠시 머물렀다가 나간다
+        w.motions.push_back(nm);
+        commit(w.name + " 움직임 추가");
+    }
+    if (!w.motions.empty()) {
+        gap(4);
+        noteText("도면에는 움직임 없이 놓인 모습이 그려집니다. 시트의 움직임 표에서 눈금을 끌면 그 순간을, 시운전(F5)에서는 움직이는 모습을 봅니다(Ctrl+R 처음부터).");
+    }
+}
+
+// 움직임 공정표: 시트의 움직임을 시간 축에 늘어놓는다. 줄을 누르면 그 부품을 고른다
+static void drawMotionChart(Screen& s, float W) {
+    std::vector<const Widget*> rows;
+    for (auto& w : s.widgets) if (!w.motions.empty()) rows.push_back(&w);
+    const bool next = !s.next.empty() && s.nextMs > 0;
+    if (rows.empty() && !next) return;
+    ImDrawList* dl = ImGui::GetWindowDrawList();
+    char b[128];
+    int T = std::max(sheetMotionEnd(s), next ? s.nextMs : 0);
+    T = std::max(1000, (T + 999) / 1000 * 1000);
+    const ImVec2 p = ImGui::GetCursorScreenPos();
+    const float nameW = px(86), x0 = p.x + nameW, tw = W - nameW - px(6), headH = px(18), rowH = px(20);
+    int step = 500;   // 눈금 글자가 겹치지 않을 만큼 띄운다
+    for (int c : {500, 1000, 2000, 5000, 10000, 30000, 60000}) { step = c; if (tw * (float)c / (float)T >= px(30)) break; }
+    const float y0 = p.y + headH, y1 = y0 + rowH * (float)std::max<size_t>(rows.size(), 1);
+    auto X = [&](int ms) { return x0 + tw * (float)std::min(ms, T) / (float)T; };
+    for (int t = 0; t <= T; t += step) {
+        const float x = floorf(X(t)) + 0.5f;
+        vline(dl, x, y0 - px(3), y1, t == 0 ? col::hair2 : col::hair);
+        if (t % 1000) snprintf(b, sizeof b, "%.1f", t / 1000.0);
+        else snprintf(b, sizeof b, "%ds", t / 1000);
+        const float lw = textW(F.mono, 11, b);
+        textAt(dl, F.mono, 11, ImVec2(std::min(x - lw * 0.5f, p.x + W - lw), p.y), col::ink3, b);
+    }
+    hline(dl, p.x, p.x + W, y1, col::hair2);
+    {   // 눈금 줄을 누르거나 끌면 그 순간의 모습을 도면에 그린다
+        ImGui::SetCursorScreenPos(ImVec2(x0 - px(4), p.y));
+        ImGui::InvisibleButton("##scrub", ImVec2(tw + px(8), headH));
+        if (ImGui::IsItemHovered()) { ImGui::SetMouseCursor(ImGuiMouseCursor_ResizeEW); tooltip("끌어서 그 순간의 모습 보기"); }
+        if (ImGui::IsItemActive()) {
+            int t = (int)lroundf((ImGui::GetIO().MousePos.x - x0) / tw * (float)T / 50.f) * 50;
+            t = ImClamp(t, 0, T);
+            if (t != g.motionT) { g.motionT = t; g.needsBuild = true; }
+        }
+    }
+    if (g.motionT >= 0) {
+        const float x = floorf(X(g.motionT)) + 0.5f;
+        vline(dl, x, p.y + px(12), y1, col::red, 1.4f);
+        dl->AddTriangleFilled(ImVec2(x - px(4), p.y + px(10)), ImVec2(x + px(4), p.y + px(10)), ImVec2(x, p.y + px(15)), col::red);
+    }
+    std::string tip;
+    for (size_t i = 0; i < rows.size(); i++) {
+        const Widget& w = *rows[i];
+        const float y = y0 + rowH * (float)i;
+        ImGui::SetCursorScreenPos(ImVec2(p.x, y));
+        ImGui::PushID(w.id);
+        if (ImGui::InvisibleButton("##row", ImVec2(W, rowH))) selectWidget(w.id);
+        const bool hov = ImGui::IsItemHovered();
+        ImGui::PopID();
+        if (hov) { dl->AddRectFilled(ImVec2(p.x - px(4), y), ImVec2(p.x + W, y + rowH), alpha(col::hover, 0.9f)); ImGui::SetMouseCursor(ImGuiMouseCursor_Hand); }
+        const bool sel = g.sel == w.id;
+        textAt(dl, F.ui, 13, ImVec2(p.x, y + px(3)), sel ? col::red : col::ink2, ellipsize(F.ui, 13, w.name, nameW - px(8)).c_str());
+        for (const Motion& m : w.motions) {
+            const MotionInfo& mi = motionInfo(m.kind);
+            const float a = X(m.delay), e = std::max(X(motionEnd(m)), a + px(3));
+            const ImVec2 ta(a, y + px(5)), tb(e, y + rowH - px(5));
+            const ImU32 c = sel ? col::red : col::ink;
+            if (mi.exit) dl->AddRect(ta, tb, c, 0.f, 1.2f);
+            else dl->AddRectFilled(ta, tb, mi.enter ? c : alpha(c, 0.45f));
+            if (m.repeat) dashLine(dl, ImVec2(e, (ta.y + tb.y) * 0.5f), ImVec2(x0 + tw, (ta.y + tb.y) * 0.5f), alpha(c, 0.6f), px(3), px(3));
+            const ImVec2 mp = ImGui::GetIO().MousePos;
+            if (hov && mp.x >= a - px(2) && mp.x <= e + px(2)) {
+                snprintf(b, sizeof b, "%s · %.2f–%.2f초%s", mi.ko, m.delay / 1000.0, motionEnd(m) / 1000.0, m.repeat ? " · 되풀이" : "");
+                tip = w.name + "  " + b;
+            }
+        }
+    }
+    if (rows.empty()) textAt(dl, F.ui, 13, ImVec2(p.x, y0 + px(3)), col::ink3, "움직이는 부품 없음");
+    if (next) {   // 다음 시트로 넘어가는 때
+        const float x = floorf(X(s.nextMs)) + 0.5f;
+        vline(dl, x, y0 - px(3), y1 + px(4), col::ink);
+        snprintf(b, sizeof b, "→ %s", s.next.c_str());
+        const float bw = textW(F.med, 13, b);
+        textAt(dl, F.med, 13, ImVec2(std::min(x - bw * 0.5f, p.x + W - bw), y1 + px(6)), col::ink, b);
+    }
+    if (!tip.empty()) tooltip(tip.c_str());
+    ImGui::SetCursorScreenPos(ImVec2(p.x, y1 + (next ? px(26) : px(6))));
+    ImGui::Dummy(ImVec2(W, 1));
+    if (g.motionT >= 0) {
+        snprintf(b, sizeof b, "도면이 %.2f초의 모습입니다.", g.motionT / 1000.0);
+        textAt(dl, F.ui, 14, ImGui::GetCursorScreenPos() + ImVec2(0, px(2)), col::red, b);
+        ImGui::SetCursorScreenPos(ImGui::GetCursorScreenPos() + ImVec2(textW(F.ui, 14, b) + px(10), 0));
+        if (textLink("놓인 모습으로", col::ink2)) { g.motionT = -1; g.needsBuild = true; }
+    } else noteText("눈금 줄을 끌면 그 순간의 모습이 도면에 그려집니다.");
+}
+
 // 라벨의 긴 글 처리와 글자 꾸밈
 static void drawTextFx(Widget& w, float W) {
     char b[120];
@@ -1726,6 +1912,13 @@ static void drawWidgetProps(Widget& w) {
             commit(w.name + " 주기 추가");
         }
     }
+    gap(14);
+
+    // 05 움직임
+    if (w.motions.empty()) snprintf(b, sizeof b, "없음");
+    else snprintf(b, sizeof b, "%d개 · %.1f초", (int)w.motions.size(), [&] { int e = 0; for (auto& m : w.motions) e = std::max(e, motionEnd(m)); return e / 1000.0; }());
+    sectionHeader("05", "움직임", b);
+    drawMotions(w, W);
     gap(24);
 }
 
@@ -1774,6 +1967,39 @@ static void drawSheetProps() {
         if (r == 1 || r == 2) { s.bgSet = true; s.bg = v; }
         if (r == 3) s.bgSet = false;
         handleField(r == 3 ? 2 : r, "시트 배경색");
+    }
+    if (d.screens.size() > 1 || !s.next.empty()) {   // 시간이 되면 다음 시트로(소개 화면 등)
+        gap(6);
+        fieldLabel("저절로 넘어가기", !s.next.empty());
+        pushFont(F.ui, 15);
+        if (comboField("##snext", s.next.empty() ? "없음" : s.next.c_str(), W)) {
+            if (ImGui::Selectable("없음", s.next.empty())) { s.next.clear(); commit("저절로 넘어가기 없음"); }
+            for (int si = 0; si < (int)d.screens.size(); si++) {
+                if (si == g.screen) continue;
+                snprintf(b, sizeof b, "%02d  %s", si + 1, d.screens[si].name.c_str());
+                if (ImGui::Selectable(b, d.screens[si].name == s.next)) {
+                    if (s.nextMs <= 0) s.nextMs = std::max(3000, (sheetMotionEnd(s) + 999) / 1000 * 1000 + 500);
+                    s.next = d.screens[si].name;
+                    commit("저절로 넘어가기 → " + s.next);
+                }
+            }
+            ImGui::EndCombo();
+        }
+        ImGui::PopFont();
+        if (!s.next.empty()) {
+            if (screenByName(d, s.next) < 0) noteText("이 이름의 시트가 없어 넘어가지 않습니다.");
+            handleField(scrubInt("##snms", "뜬 뒤 ms", &s.nextMs, 100, 600000, W), "저절로 넘어가기 시간");
+        }
+    }
+    {
+        bool any = !s.next.empty();
+        for (auto& w : s.widgets) any = any || !w.motions.empty();
+        if (any) {
+            gap(6);
+            fieldLabel("움직임 표");
+            gap(2);
+            drawMotionChart(s, W);
+        }
     }
     gap(14);
 

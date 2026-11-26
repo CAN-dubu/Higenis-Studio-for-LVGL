@@ -100,6 +100,7 @@ struct App {
     std::string nameBefore;
     std::string mergeKey;
     double revAnimT = -10;                       // 새 개정이 표에 써지는 연출
+    int motionT = -1;                            // 움직임 표의 바늘(ms). -1: 움직임 없이 놓인 모습
     struct Ghost { Rect r; double t; };
     std::vector<Ghost> ghosts;                   // 지운 자리의 연필 자국
     // 시운전

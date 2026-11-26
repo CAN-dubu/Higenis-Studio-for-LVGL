@@ -345,6 +345,12 @@ std::vector<GenFile> generateCode(const Document& d, const std::string& rev) {
                 }
         bool sheetFx = false;
         for (auto& w : s.widgets) if (w.type == WType::Label && w.x2.fx && w.x2.longMode != 2) sheetFx = usesFx = true;
+        // 움직임과 저절로 넘어가기도 같은 파일(higenis_fx)을 쓴다
+        const int afterT = s.next.empty() || s.nextMs <= 0 ? -1 : screenByName(d, s.next);
+        const bool after = afterT >= 0 && afterT != (int)si;
+        for (auto& w : s.widgets)
+            for (auto& m : w.motions) if (motionApplies(m.kind, w.type)) sheetFx = usesFx = true;
+        if (after) sheetFx = usesFx = true;
         c += "#include \"" + sn + ".h\"\n";
         if (usesFont) c += "#include \"ui_font.h\"\n";
         if (sheetFx) c += "#include \"higenis_fx.h\"\n";
@@ -356,11 +362,15 @@ std::vector<GenFile> generateCode(const Document& d, const std::string& rev) {
                 if (t >= 0 && t != (int)si) targets.insert(t);
             }
         for (int t : targets) c += "#include \"" + idents[t] + ".h\"\n";
-        if (!targets.empty()) c += "\n";
+        if (after && !targets.count(afterT)) c += "#include \"" + idents[afterT] + ".h\"\n";
+        if (!targets.empty() || after) c += "\n";
         for (auto& w : s.widgets) c += "lv_obj_t * " + var(w.id) + ";\n";
         for (int t : targets)
             c += "\nstatic void go_to_" + idents[t] + "(lv_event_t * e)\n{\n    LV_UNUSED(e);\n    lv_screen_load_anim(" + idents[t] +
                  "_create(), LV_SCR_LOAD_ANIM_NONE, 0, 0, true); /* 새로 만들고 지금 화면은 지운다 */\n}\n";
+        if (after)
+            c += "\nstatic void after_to_" + idents[afterT] + "(void)\n{\n    lv_screen_load_anim(" + idents[afterT] +
+                 "_create(), LV_SCR_LOAD_ANIM_NONE, 0, 0, true);\n}\n";
         c += "\nlv_obj_t * " + sn + "_create(void)\n{\n";
         if (usesFont) c += "    ui_font_init();\n\n";
         c += "    lv_obj_t * scr = lv_obj_create(NULL);\n";
@@ -515,6 +525,19 @@ std::vector<GenFile> generateCode(const Document& d, const std::string& rev) {
                 if (t >= 0 && t != (int)si)
                     c += "    lv_obj_add_event_cb(" + v + ", go_to_" + idents[t] + ", " + eventLv(e.code) + ", NULL);\n";
             }
+            for (auto& m : w.motions) {
+                if (!motionApplies(m.kind, w.type)) continue;
+                const MotionInfo& mi = motionInfo(m.kind);
+                snprintf(b, sizeof b, "    higenis_motion(%s, %s, %d, %d, %s, %s, %d, %d); /* %s",
+                         v.c_str(), mi.macro, m.delay, m.dur, motionEaseMacro(m.ease), motionDirMacro(m.dir), m.amount, m.repeat ? 1 : 0, mi.ko);
+                c += b;
+                if (mi.usesDir) c += std::string(" ") + motionDirKo(m.kind, m.dir);
+                c += m.repeat ? " · 되풀이 */\n" : " */\n";
+            }
+        }
+        if (after) {
+            snprintf(b, sizeof b, "\n    higenis_after(scr, %d, after_to_%s); /* %.1f초 뒤 다음 시트로 */\n", s.nextMs, idents[afterT].c_str(), s.nextMs / 1000.0);
+            c += b;
         }
         c += "\n    return scr;\n}\n";
         files.push_back({sn + ".c", c});

@@ -1,0 +1,16 @@
+HG	1	Higenis Studio
+project	motion
+res	480	272	16
+theme	0	2196F3
+nextid	5
+screen	intro	1	000000	home	2000
+w	1	0	label	lbl_hello	0	0	0	0	4	1	0	Hello		0	0	100	0	2196F3
+s	default	text_color	16777215
+m	type	0	600	linear	3	0	0
+m	fade_out	1400	300	in_out	3	0	0
+w	2	0	container	box	0	40	60	60	4	0	0			0	0	100	0	2196F3
+m	grow	200	500	overshoot	3	0	0
+m	spin	200	1000	linear	3	360	1
+m	wipe	0	400	in_out	2	0	0
+screen	home	0	FFFFFF
+w	3	0	label	lbl_home	0	0	0	0	4	1	0	Home		0	0	100	0	2196F3

@@ -237,6 +237,7 @@ void expectState(const std::string& arg) {
     else if (key == "screen") got = std::to_string(g.screen);
     else if (key == "screens") got = std::to_string(g.doc.screens.size());
     else if (key == "sheet") got = curScreen().name;
+    else if (key == "next") got = curScreen().next + "/" + std::to_string(curScreen().nextMs);
     else if (key == "widgets") got = std::to_string(curScreen().widgets.size());
     else if (key == "armed") got = std::to_string(g.armed);
     else if (key == "drag") got = std::to_string((int)g.drag);
@@ -251,7 +252,7 @@ void expectState(const std::string& arg) {
     else if (key == "simtext") got = lvhost::simWantsText() ? "1" : "0";
     else if (key == "simlast") {   // 마지막 기록: 부품/사건/콜백/이동/값/횟수>1
         got = "-";
-        if (!lvhost::simLog().empty()) { auto& e = lvhost::simLog().back(); got = e.name + "/" + eventKey(e.code) + "/" + e.cb + "/" + e.go + "/" + e.value; }
+        if (!lvhost::simLog().empty()) { auto& e = lvhost::simLog().back(); got = e.name + "/" + (e.code < 0 ? "after" : eventKey(e.code)) + "/" + e.cb + "/" + e.go + "/" + e.value; }
     }
     else if (key == "images") got = std::to_string(g.doc.images.size());
     else if (key == "gen") got = std::to_string(g.gen.size());
@@ -270,6 +271,7 @@ void expectState(const std::string& arg) {
     else if (key == "index") got = std::to_string(widgetIndex(curScreen(), w->id));
     else if (key == "pressedbg") { const StyleVal& v = w->style[ST_PRESSED][SP_BG_COLOR]; got = v.set ? (v.v == 0x0D47A1 ? "original" : "changed") : "unset"; }
     else if (key == "events") got = std::to_string(w->events.size());
+    else if (key == "motions") got = std::to_string(w->motions.size());
     else if (key == "image") { const auto* as = image::find(g.doc, w->text); got = as ? (*as)->file + " " + std::to_string((*as)->w) + "x" + std::to_string((*as)->h) : "-"; }
     else if (key == "font") {   // 실제로 쓰는 글꼴 이름과 크기
         int fs, ff;
@@ -377,6 +379,7 @@ void stepScript() {
             for (auto& w : curScreen().widgets) if (w.name == n) for (int i = 0; i < kExtraFieldCount; i++) if (!strcmp(k, kExtraFields[i].key)) { kExtraFields[i].get(w.x2) = v; commit(k); }
         }
         else if (c == "pixelview") g.pixelView = atoi(a.c_str()) != 0;
+        else if (c == "motiont") { g.motionT = atoi(a.c_str()); g.needsBuild = true; }   // 움직임 표의 바늘(ms, -1 끝)
         else if (c == "dump" && g_script.log) dumpState(g_script.log, a);
         else if (c == "expect") { expectState(a); continue; }
         else if (c == "shot") g_script.shot = utf8ToWide(atScript(a));

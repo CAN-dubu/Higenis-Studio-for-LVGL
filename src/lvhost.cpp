@@ -27,6 +27,7 @@ lv_obj_t* g_scr = nullptr;
 std::map<int, Rect> g_coords, g_content;
 std::map<int, lv_obj_t*> g_objs;
 bool g_view = false;   // 매끈하게 보기
+int g_motionT = -1;   // 다음 build에서 보일 움직임 시점(ms)
 bool g_themeInit = false, g_themeDark = false;
 int g_themePrimary = 0;
 
@@ -504,13 +505,35 @@ void simEventCb(lv_event_t* e) {
     }
 }
 
+// 시간이 되어 저절로 다음 시트로
+int g_simNext = -1;
+void simAfterGo() {
+    const int t = g_simNext;
+    if (!g_simOn || t < 0 || t >= (int)g_simDoc.screens.size()) return;
+    lvhost::SimEvent ev;
+    ev.t = lvhost::simTime();
+    ev.screen = g_simScr; ev.code = -1; ev.name = g_simDoc.screens[g_simScr].name; ev.go = g_simDoc.screens[t].name;
+    g_simLog.push_back(ev);
+    simLoad(t);
+}
+
 // 내보낸 코드와 같은 방식: 새로 만들어 띄우고 지금 화면은 지운다
 void simLoad(int si) {
     std::map<int, lv_obj_t*> objs;
     g_simTa = nullptr;
     g_simScr = si;
     lv_obj_t* scr = makeScreen(g_simDoc, si, g_simPlan, objs);
-    for (const Widget& w : g_simDoc.screens[si].widgets) lv_obj_add_event_cb(objs[w.id], simEventCb, LV_EVENT_ALL, (void*)(intptr_t)w.id);
+    const Screen& s = g_simDoc.screens[si];
+    for (const Widget& w : s.widgets) lv_obj_add_event_cb(objs[w.id], simEventCb, LV_EVENT_ALL, (void*)(intptr_t)w.id);
+    // 움직임은 시운전에서만(도면은 움직임 없이 놓인 모습)
+    for (const Widget& w : s.widgets)
+        for (const Motion& m : w.motions)
+            if (motionApplies(m.kind, w.type)) higenis_motion(objs[w.id], m.kind, (uint32_t)m.delay, (uint32_t)m.dur, m.ease, m.dir, m.amount, m.repeat ? 1 : 0);
+    g_simNext = -1;
+    if (!s.next.empty() && s.nextMs > 0) {
+        const int t = screenByName(g_simDoc, s.next);
+        if (t >= 0 && t != si) { g_simNext = t; higenis_after(scr, (uint32_t)s.nextMs, simAfterGo); }
+    }
     g_objs.clear();
     g_scr = scr;
     lv_screen_load_anim(scr, LV_SCREEN_LOAD_ANIM_NONE, 0, 0, true);
@@ -529,7 +552,11 @@ void init(int w, int h, int depth) {
     configure(w, h, depth);
 }
 
+void setMotionTime(int ms) { g_motionT = ms; }
+
 void build(const Document& d, int si, int previewId, int previewState) {
+    const int motionT = g_motionT;
+    g_motionT = -1;
     smooth::enable(false);   // 마지막 한 장만 매끈하게 그린다
     if (g_simOn) simStop();
     prepare(d);
@@ -557,6 +584,22 @@ void build(const Document& d, int si, int previewId, int previewState) {
         lv_obj_add_state(preview, lvState(previewState));
         g_tickOffset += 5000;
         lv_timer_handler();
+        lv_obj_update_layout(scr);
+    }
+    if (motionT >= 0) {   // 움직임 표의 바늘: 그 순간까지 움직임을 돌리고 멈춘다(그리지 않고 값만)
+        const Screen& s = d.screens[si];
+        for (const Widget& w : s.widgets) {
+            auto it = g_objs.find(w.id);
+            if (it == g_objs.end()) continue;
+            for (const Motion& m : w.motions)
+                if (motionApplies(m.kind, w.type)) higenis_motion(it->second, m.kind, (uint32_t)m.delay, (uint32_t)m.dur, m.ease, m.dir, m.amount, m.repeat ? 1 : 0);
+        }
+        const int step = std::max(16, motionT / 400);
+        for (int left = motionT; left > 0; left -= step) {
+            g_tickOffset += (uint32_t)std::min(step, left);
+            lv_anim_refr_now();
+        }
+        for (auto& [id, o] : g_objs) lv_anim_delete(o, nullptr);
         lv_obj_update_layout(scr);
     }
 

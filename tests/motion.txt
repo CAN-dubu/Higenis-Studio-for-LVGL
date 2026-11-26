@@ -1,0 +1,36 @@
+wait 5
+load @img/motion.hg
+wait 5
+expect sheet intro
+expect next home/2000
+expect motions:lbl_hello 2
+expect motions:box 3
+expect errors 0
+motiont 300
+wait 5
+expect sheet intro
+motiont 1600
+wait 5
+motiont -1
+wait 3
+save @tmp_motion.hg
+wait 2
+load @tmp_motion.hg
+wait 5
+expect next home/2000
+expect motions:box 3
+keydown f5
+keyup f5
+wait 3
+expect sim 1
+expect simsheet intro
+wait 60
+expect simsheet intro
+wait 120
+expect simsheet home
+expect simlast intro/after//home/
+keydown esc
+keyup esc
+wait 3
+expect sim 0
+quit

@@ -86,6 +86,56 @@ const ExtraField kExtraFields[] = {
 #undef XF
 const int kExtraFieldCount = (int)(sizeof kExtraFields / sizeof kExtraFields[0]);
 
+// ───────────────────────── 움직임 ─────────────────────────
+static const MotionInfo kMotions[MO_COUNT] = {
+    {"fade_in", "나타나기", "HIGENIS_MO_FADE_IN", true, false, false, false, nullptr, 0, 0, 0, 500, ME_OUT},
+    {"slide_in", "밀려오기", "HIGENIS_MO_SLIDE_IN", true, false, false, true, "거리 px", 1, 800, 40, 600, ME_OUT},
+    {"grow", "커지기", "HIGENIS_MO_GROW", true, false, false, false, "시작 크기 %", 0, 99, 60, 500, ME_OVERSHOOT},
+    {"wipe", "펼치기", "HIGENIS_MO_WIPE", true, false, false, true, nullptr, 0, 0, 0, 700, ME_IN_OUT},
+    {"type", "글자 치기", "HIGENIS_MO_TYPE", true, false, false, false, nullptr, 0, 0, 0, 1200, ME_LINEAR},
+    {"fade_out", "사라지기", "HIGENIS_MO_FADE_OUT", false, true, false, false, nullptr, 0, 0, 0, 400, ME_IN_OUT},
+    {"slide_out", "밀려나기", "HIGENIS_MO_SLIDE_OUT", false, true, false, true, "거리 px", 1, 800, 40, 500, ME_IN_OUT},
+    {"shrink", "작아지기", "HIGENIS_MO_SHRINK", false, true, false, false, "끝 크기 %", 0, 99, 60, 400, ME_IN_OUT},
+    {"pulse", "두근두근", "HIGENIS_MO_PULSE", false, false, true, false, "부푸는 %", 1, 50, 6, 700, ME_IN_OUT},
+    {"blink", "깜빡이기", "HIGENIS_MO_BLINK", false, false, true, false, nullptr, 0, 0, 0, 1000, ME_LINEAR},
+    {"spin", "돌기", "HIGENIS_MO_SPIN", false, false, true, false, "각도 °", 1, 3600, 360, 2000, ME_LINEAR},
+};
+const MotionInfo& motionInfo(int k) { return kMotions[std::clamp(k, 0, MO_COUNT - 1)]; }
+static const char* kEaseKo[ME_COUNT] = {"일정하게", "부드럽게 멈춤", "부드럽게 출발·멈춤", "살짝 넘쳤다 제자리", "통통 튀기"};
+static const char* kEaseKey[ME_COUNT] = {"linear", "out", "in_out", "overshoot", "bounce"};
+static const char* kEaseMacro[ME_COUNT] = {"HIGENIS_EASE_LINEAR", "HIGENIS_EASE_OUT", "HIGENIS_EASE_IN_OUT", "HIGENIS_EASE_OVERSHOOT", "HIGENIS_EASE_BOUNCE"};
+const char* motionEaseKo(int e) { return kEaseKo[std::clamp(e, 0, ME_COUNT - 1)]; }
+const char* motionEaseKey(int e) { return kEaseKey[std::clamp(e, 0, ME_COUNT - 1)]; }
+const char* motionEaseMacro(int e) { return kEaseMacro[std::clamp(e, 0, ME_COUNT - 1)]; }
+const char* motionDirKo(int kind, int dir) {
+    static const char* from[4] = {"왼쪽에서", "오른쪽에서", "위에서", "아래에서"};
+    static const char* to[4] = {"왼쪽으로", "오른쪽으로", "위로", "아래로"};
+    return (kind == MO_SLIDE_OUT ? to : from)[dir & 3];
+}
+const char* motionDirMacro(int dir) {
+    static const char* m[4] = {"HIGENIS_DIR_LEFT", "HIGENIS_DIR_RIGHT", "HIGENIS_DIR_UP", "HIGENIS_DIR_DOWN"};
+    return m[dir & 3];
+}
+Motion defaultMotion(int kind) {
+    Motion m;
+    const MotionInfo& mi = motionInfo(kind);
+    m.kind = std::clamp(kind, 0, MO_COUNT - 1);
+    m.dur = mi.defDur;
+    m.ease = mi.defEase;
+    m.amount = mi.defAmount;
+    m.dir = kind == MO_WIPE ? 0 : 3;
+    m.repeat = mi.loop;
+    return m;
+}
+int motionEnd(const Motion& m) { return m.delay + m.dur; }
+bool motionApplies(int kind, WType t) { return kind != MO_TYPE || t == WType::Label; }
+int sheetMotionEnd(const Screen& s) {
+    int e = 0;
+    for (auto& w : s.widgets)
+        for (auto& m : w.motions) e = std::max(e, motionEnd(m));
+    return e;
+}
+
 void resolveFont(const Screen& s, const Widget& w, int state, int& size, int& face) {
     size = 0;
     face = -1;
@@ -687,8 +737,10 @@ std::string serializeDocument(const Document& d, bool withData) {
     }
     snprintf(b, sizeof b, "nextid\t%d\n", d.nextId); o += b;
     for (auto& s : d.screens) {
-        snprintf(b, sizeof b, "\t%d\t%06X\n", s.bgSet ? 1 : 0, s.bg);
+        snprintf(b, sizeof b, "\t%d\t%06X", s.bgSet ? 1 : 0, s.bg);
         o += "screen\t" + esc(s.name) + b;
+        if (!s.next.empty()) o += "\t" + esc(s.next) + "\t" + std::to_string(s.nextMs);   // 저절로 넘어가기
+        o += "\n";
         for (auto& w : s.widgets) {
             o += "w\t" + std::to_string(w.id) + "\t" + std::to_string(w.parent) + "\t" + typeInfo(w.type).key + "\t" +
                  esc(w.name);
@@ -712,6 +764,10 @@ std::string serializeDocument(const Document& d, bool withData) {
                     }
             }
             for (auto& e : w.events) o += std::string("e\t") + eventKey(e.code) + "\t" + esc(e.cb) + (e.go.empty() ? "" : "\t" + esc(e.go)) + "\n";
+            for (auto& m : w.motions) {
+                snprintf(b, sizeof b, "m\t%s\t%d\t%d\t%s\t%d\t%d\t%d\n", motionInfo(m.kind).key, m.delay, m.dur, motionEaseKey(m.ease), m.dir, m.amount, m.repeat ? 1 : 0);
+                o += b;
+            }
         }
     }
     return o;
@@ -726,6 +782,7 @@ void renameSheetRefs(Document& d, const std::string& from, const std::string& to
     for (auto& s : d.screens)
         for (auto& w : s.widgets)
             for (auto& e : w.events) if (e.go == from) e.go = to;
+    for (auto& s : d.screens) if (s.next == from) s.next = to;
 }
 
 bool saveDocument(const Document& d, const std::wstring& path, std::string& err) {
@@ -795,6 +852,7 @@ bool loadDocument(Document& out, const std::wstring& path, std::string& err) {
             d.screens.push_back({});
             cs = &d.screens.back();
             cs->name = S(1); cs->bgSet = I(2) != 0; cs->bg = H(3);
+            cs->next = S(4); cs->nextMs = std::clamp(I(5), 0, 600000);
             cw = nullptr;
         } else if (k == "w" && cs && F.size() >= 19) {
             Widget w;
@@ -831,6 +889,22 @@ bool loadDocument(Document& out, const std::wstring& path, std::string& err) {
             int c = -1;
             for (int i = 0; i < EV_COUNT; i++) if (F[1] == eventKey(i)) c = i;
             if (c >= 0) cw->events.push_back({c, S(2), S(3)});
+        } else if (k == "m" && cw && F.size() >= 8) {   // 움직임
+            int kind = -1, ease = ME_OUT;
+            for (int i = 0; i < MO_COUNT; i++) if (F[1] == motionInfo(i).key) kind = i;
+            for (int i = 0; i < ME_COUNT; i++) if (F[4] == motionEaseKey(i)) ease = i;
+            if (kind >= 0) {
+                Motion m;
+                const MotionInfo& mi = motionInfo(kind);
+                m.kind = kind;
+                m.delay = std::clamp(I(2), 0, 600000);
+                m.dur = std::clamp(I(3), 1, 60000);
+                m.ease = ease;
+                m.dir = std::clamp(I(5), 0, 3);
+                m.amount = mi.amountKo ? std::clamp(I(6), mi.amountMin, mi.amountMax) : 0;
+                m.repeat = I(7) != 0;
+                cw->motions.push_back(m);
+            }
         }
     }
     if (!header || d.screens.empty()) { err = "Higenis Studio 도면 파일(.hg)이 아님"; return false; }

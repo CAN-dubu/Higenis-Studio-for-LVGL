@@ -72,6 +72,32 @@ struct Extra {
     ImageFx img;
 };
 struct ExtraField { const char* key; int& (*get)(Extra&); int minv, maxv; };
+
+// 움직임: 시트가 뜬 때부터 delay ms 뒤에 dur ms 동안. 미리보기(도면)는 움직임 없이 놓인 모습, 시운전과 내보낸 코드에서 움직인다
+enum MotionKind { MO_FADE_IN, MO_SLIDE_IN, MO_GROW, MO_WIPE, MO_TYPE, MO_FADE_OUT, MO_SLIDE_OUT, MO_SHRINK,
+                  MO_PULSE, MO_BLINK, MO_SPIN, MO_COUNT };
+enum MotionEase { ME_LINEAR, ME_OUT, ME_IN_OUT, ME_OVERSHOOT, ME_BOUNCE, ME_COUNT };
+struct Motion {
+    int kind = MO_FADE_IN;
+    int delay = 0, dur = 500;
+    int ease = ME_OUT;
+    int dir = 3;                      // 0 왼쪽 1 오른쪽 2 위 3 아래 (밀려오기: 어디서, 밀려나기: 어디로, 펼치기: 어디서부터)
+    int amount = 40;                  // 밀기: 거리 px, 커지기·작아지기: 시작 크기 %, 두근: 부푸는 %, 돌기: 도
+    bool repeat = false;              // 계속 되풀이(돌기·깜빡이기 말고는 갔다가 돌아온다)
+    bool operator==(const Motion& o) const {
+        return kind == o.kind && delay == o.delay && dur == o.dur && ease == o.ease && dir == o.dir && amount == o.amount && repeat == o.repeat;
+    }
+};
+struct MotionInfo { const char* key; const char* ko; const char* macro; bool enter, exit, loop, usesDir; const char* amountKo; int amountMin, amountMax, defAmount, defDur, defEase; };
+const MotionInfo& motionInfo(int k);
+const char* motionEaseKo(int e);
+const char* motionEaseKey(int e);
+const char* motionEaseMacro(int e);
+const char* motionDirKo(int kind, int dir);
+const char* motionDirMacro(int dir);
+Motion defaultMotion(int kind);
+int  motionEnd(const Motion& m);      // 끝나는 때(ms). 되풀이는 시작 + 한 번
+bool motionApplies(int kind, WType t);
 extern const ExtraField kExtraFields[];
 extern const int kExtraFieldCount;
 
@@ -90,12 +116,15 @@ struct Widget {
     Extra x2;
     StyleVal style[ST_COUNT][SP_COUNT];
     std::vector<EventBind> events;
+    std::vector<Motion> motions;
 };
 
 struct Screen {
     std::string name = "screen";
     bool bgSet = false;
     int bg = 0xFFFFFF;
+    std::string next;                 // 저절로 넘어갈 시트(비면 없음)
+    int nextMs = 0;                   // 뜬 뒤 몇 ms에
     std::vector<Widget> widgets;      // 전위 순서(부모 → 하위 트리), 같은 부모 안에서는 z 순서
 };
 
@@ -156,6 +185,7 @@ int  addWidget(Document& d, Screen& s, WType t, int parent, int x, int y, int w,
 void deleteWidget(Screen& s, int id);
 int  duplicateWidget(Document& d, Screen& s, int id);
 void renameSheetRefs(Document& d, const std::string& from, const std::string& to);   // 시트 이름이 바뀌면 이동 대상도
+int  sheetMotionEnd(const Screen& s);   // 시트의 움직임이 모두 끝나는 때(ms)
 int  screenByName(const Document& d, const std::string& name);
 void moveZ(Screen& s, int id, int dir);                    // -2 맨 뒤, -1 뒤로, +1 앞으로, +2 맨 앞
 void resolveFont(const Screen& s, const Widget& w, int state, int& size, int& face);   // 실제로 쓰일 글꼴(지정이 없으면 물려받은 것)
@@ -217,6 +247,7 @@ bool wantsClick(const Widget& w);      // 눌러도 반응이 없는 형식인�
 namespace lvhost {
 void init(int w, int h, int depth);
 void build(const Document& d, int screenIndex, int previewId, int previewState);
+void setMotionTime(int ms);          // 다음 build()만: 움직임을 ms 시점에 멈춘 모습으로 그린다(-1 움직임 없이)
 void manualClock();                  // 입력 재생: 프레임마다 1/60초씩
 void update();                       // 매 프레임: 타이머·애니메이션
 bool takeFrame();                    // 새 픽셀이 있으면 true

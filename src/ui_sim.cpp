@@ -252,8 +252,9 @@ void drawSimRight(ImVec2 p, ImVec2 sz) {
         if (vw > 0) textAt(dl, F.mono, 12, ImVec2(rp.x + W - vw, rp.y + px(6)), col::ink, val.c_str());
         // 둘째 줄: 사건 → 콜백 · 이동
         float x = nx;
-        textAt(dl, F.ui, 14, ImVec2(x, rp.y + px(25)), col::ink2, eventKo(e.code));
-        x += textW(F.ui, 14, eventKo(e.code)) + px(8);
+        const char* ek = e.code < 0 ? "시간이 되어" : eventKo(e.code);   // 저절로 넘어가기
+        textAt(dl, F.ui, 14, ImVec2(x, rp.y + px(25)), col::ink2, ek);
+        x += textW(F.ui, 14, ek) + px(8);
         const float room = rp.x + W - x;
         if (!e.cb.empty() || !e.go.empty()) {
             std::string t = e.cb.empty() ? "" : "→ " + e.cb;
