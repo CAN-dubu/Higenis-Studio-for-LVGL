@@ -1,0 +1,144 @@
+wait 6
+select lbl_title
+wait 5
+expect font:lbl_title 기본 20
+expect x.fx:lbl_title 0
+move 1424 468
+wait 2
+down 0
+wait 1
+up 0
+wait 5
+expect x.fx:lbl_title 2
+expect note lbl_title 글자 꾸밈 외곽선
+expect x.fx_color:lbl_title 16777215
+move 1365 558
+wait 2
+down 0
+wait 1
+up 0
+wait 5
+expect st.bg_opa:lbl_title 150
+expect note lbl_title 밑판 어둡게
+expect st.text_color:lbl_title 16777215
+keydown ctrl
+keydown z
+keyup z
+keyup ctrl
+wait 3
+expect st.bg_opa:lbl_title unset
+expect x.fx:lbl_title 2
+keydown ctrl
+keydown z
+keyup z
+keyup ctrl
+wait 3
+expect x.fx:lbl_title 0
+expect dirty 0
+setface lbl_title @BarlowCondensed-Medium.ttf
+wait 3
+expect st.font_face:lbl_title 1
+openfonts
+wait 20
+expect popup 1
+move 560 160
+wait 2
+down 0
+wait 1
+up 0
+wait 5
+text malgun gothic
+wait 30
+move 500 213
+wait 2
+down 0
+wait 1
+up 0
+wait 5
+move 1083 772
+wait 2
+down 0
+wait 1
+up 0
+wait 5
+wait 4
+expect popup 0
+expect font:lbl_title 맑은 고딕 20
+expect errors 0
+save @tmp.hg
+load @tmp.hg
+wait 5
+expect font:lbl_title 맑은 고딕 20
+expect errors 0
+keydown ctrl
+keydown e
+keyup e
+keyup ctrl
+wait 3
+wait 8
+expect gen 9
+keydown esc
+keyup esc
+wait 3
+wait 3
+setx lbl_title fx 1
+wait 3
+keydown ctrl
+keydown e
+keyup e
+keyup ctrl
+wait 3
+wait 8
+expect gen 11
+keydown esc
+keyup esc
+wait 3
+wait 3
+openfonts
+wait 6
+keydown esc
+keyup esc
+wait 3
+wait 3
+expect popup 0
+drop 720 480 @img/photo.jpg
+wait 5
+expect x.cut:img_1 0
+setx img_1 blur 6
+setx img_1 shade 60
+wait 3
+expect x.blur:img_1 6
+select img_1
+wait 4
+move 1323 698
+wait 2
+down 0
+wait 1
+up 0
+wait 5
+expect x.cut:img_1 25
+move 1323 670
+wait 2
+down 0
+wait 1
+up 0
+wait 5
+expect x.crisp:img_1 1
+save @tmp.hg
+load @tmp.hg
+wait 4
+expect x.blur:img_1 6
+expect x.shade:img_1 60
+expect x.cut:img_1 25
+expect x.crisp:img_1 1
+keydown f5
+keyup f5
+wait 3
+wait 10
+expect sim 1
+keydown esc
+keyup esc
+wait 3
+wait 3
+expect errors 0
+quit

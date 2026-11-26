@@ -1,0 +1,157 @@
+HG	1	Higenis Studio
+project	전자종이 리모컨
+res	540	960	16
+theme	0	000000
+about	회색도 그림자도 없이 굵은 선과 글자만. 전자종이에서 또렷합니다.
+credit	배치 참고: Boisti13/papers3-dashboard (MIT)
+nextid	19
+screen	home	1	FFFFFF
+w	1	0	label	lbl_time	28	34	0	0	0	1	0	09:40		0	0	100	0	2196F3
+s	default	text_color	0
+s	default	text_font	24
+w	2	0	label	lbl_title	0	26	0	0	1	1	0	우리 집		0	0	100	0	2196F3
+s	default	text_color	0
+s	default	text_font	36
+w	3	0	label	lbl_batt	-28	34	0	0	2	1	0			0	0	100	0	2196F3
+s	default	text_color	0
+s	default	text_font	24
+w	4	0	container	rule	24	88	492	3	0	0	0			0	0	100	0	2196F3
+s	default	bg_color	0
+s	default	bg_opa	255
+s	default	border_width	0
+s	default	radius	0
+s	default	pad_all	0
+w	5	0	button	btn_heat	24	112	238	152	0	0	0	난방		0	0	100	0	2196F3
+s	default	bg_color	0
+s	default	bg_opa	255
+s	default	border_color	0
+s	default	border_width	3
+s	default	radius	14
+s	default	text_color	16777215
+s	default	text_font	28
+s	default	pad_all	0
+s	default	shadow_width	0
+e	clicked	on_heat
+w	6	0	button	btn_switches	278	112	238	152	0	0	0	스위치		0	0	100	0	2196F3
+s	default	bg_color	16777215
+s	default	bg_opa	255
+s	default	border_color	0
+s	default	border_width	3
+s	default	radius	14
+s	default	text_color	0
+s	default	text_font	28
+s	default	pad_all	0
+s	default	shadow_width	0
+e	clicked	on_switches
+w	7	0	button	btn_clean	24	280	238	152	0	0	0	청소		0	0	100	0	2196F3
+s	default	bg_color	16777215
+s	default	bg_opa	255
+s	default	border_color	0
+s	default	border_width	3
+s	default	radius	14
+s	default	text_color	0
+s	default	text_font	28
+s	default	pad_all	0
+s	default	shadow_width	0
+e	clicked	on_clean
+w	8	0	button	btn_climate	278	280	238	152	0	0	0	공조		0	0	100	0	2196F3
+s	default	bg_color	16777215
+s	default	bg_opa	255
+s	default	border_color	0
+s	default	border_width	3
+s	default	radius	14
+s	default	text_color	0
+s	default	text_font	28
+s	default	pad_all	0
+s	default	shadow_width	0
+e	clicked	on_climate
+w	9	0	button	btn_media	24	448	238	152	0	0	0	미디어		0	0	100	0	2196F3
+s	default	bg_color	16777215
+s	default	bg_opa	255
+s	default	border_color	0
+s	default	border_width	3
+s	default	radius	14
+s	default	text_color	0
+s	default	text_font	28
+s	default	pad_all	0
+s	default	shadow_width	0
+e	clicked	on_media
+w	10	0	button	btn_air	278	448	238	152	0	0	0	공기질		0	0	100	0	2196F3
+s	default	bg_color	16777215
+s	default	bg_opa	255
+s	default	border_color	0
+s	default	border_width	3
+s	default	radius	14
+s	default	text_color	0
+s	default	text_font	28
+s	default	pad_all	0
+s	default	shadow_width	0
+e	clicked	on_air
+w	11	0	button	btn_bed	24	616	238	152	0	0	0	침실		0	0	100	0	2196F3
+s	default	bg_color	16777215
+s	default	bg_opa	255
+s	default	border_color	0
+s	default	border_width	3
+s	default	radius	14
+s	default	text_color	0
+s	default	text_font	28
+s	default	pad_all	0
+s	default	shadow_width	0
+e	clicked	on_bed
+w	12	0	button	btn_scene	278	616	238	152	0	0	0	장면		0	0	100	0	2196F3
+s	default	bg_color	16777215
+s	default	bg_opa	255
+s	default	border_color	0
+s	default	border_width	3
+s	default	radius	14
+s	default	text_color	0
+s	default	text_font	28
+s	default	pad_all	0
+s	default	shadow_width	0
+e	clicked	on_scene
+w	13	0	container	status	24	788	492	64	0	0	0			0	0	100	0	2196F3
+s	default	bg_color	16777215
+s	default	bg_opa	255
+s	default	border_color	0
+s	default	border_width	3
+s	default	radius	14
+s	default	pad_all	0
+w	14	13	label	lbl_status	20	0	0	0	3	1	0	  난방 켜짐		0	0	100	0	2196F3
+s	default	text_color	0
+s	default	text_font	24
+w	15	13	label	lbl_temp	-20	0	0	0	5	1	0	22.0°		0	0	100	0	2196F3
+s	default	text_color	0
+s	default	text_font	24
+w	16	0	button	btn_prev	24	872	156	64	0	0	0			0	0	100	0	2196F3
+s	default	bg_color	16777215
+s	default	bg_opa	255
+s	default	border_color	0
+s	default	border_width	3
+s	default	radius	14
+s	default	text_color	0
+s	default	text_font	28
+s	default	pad_all	0
+s	default	shadow_width	0
+e	clicked	on_prev
+w	17	0	button	btn_home	192	872	156	64	0	0	0			0	0	100	0	2196F3
+s	default	bg_color	16777215
+s	default	bg_opa	255
+s	default	border_color	0
+s	default	border_width	3
+s	default	radius	14
+s	default	text_color	0
+s	default	text_font	28
+s	default	pad_all	0
+s	default	shadow_width	0
+e	clicked	on_home
+w	18	0	button	btn_next	360	872	156	64	0	0	0			0	0	100	0	2196F3
+s	default	bg_color	16777215
+s	default	bg_opa	255
+s	default	border_color	0
+s	default	border_width	3
+s	default	radius	14
+s	default	text_color	0
+s	default	text_font	28
+s	default	pad_all	0
+s	default	shadow_width	0
+e	clicked	on_next

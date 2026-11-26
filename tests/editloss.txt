@@ -1,0 +1,157 @@
+wait 5
+select btn_start
+wait 3
+move 1400 385
+wait 2
+down 0
+wait 1
+up 0
+wait 3
+
+keydown ctrl
+keydown a
+keyup a
+keyup ctrl
+wait 3
+
+text 정지
+wait 2
+click 720 730
+wait 5
+expect sel -
+expect text:btn_start 정지
+expect note btn_start 글자
+expect revs 2
+expect dirty 1
+keydown ctrl
+keydown z
+keyup z
+keyup ctrl
+wait 3
+
+expect text:btn_start 시작
+expect dirty 0
+keydown ctrl
+keydown y
+keyup y
+keyup ctrl
+wait 3
+
+expect text:btn_start 정지
+select lbl_mode
+wait 4
+move 1350 415
+wait 2
+down 0
+wait 1
+up 0
+wait 3
+
+keydown ctrl
+keydown a
+keyup a
+keyup ctrl
+wait 3
+
+text 모드
+wait 2
+move 431 24
+wait 2
+down 0
+wait 1
+up 0
+wait 3
+
+expect screen 1
+move 354 24
+wait 2
+down 0
+wait 1
+up 0
+wait 3
+
+expect text:lbl_mode 모드
+expect note lbl_mode 글자
+select btn_schedule
+wait 3
+move 1350 115
+wait 2
+down 0
+wait 1
+up 0
+wait 3
+
+keydown ctrl
+keydown a
+keyup a
+keyup ctrl
+wait 3
+
+text 9 bad-Name!
+wait 2
+click 720 730
+wait 5
+expect exists:s_9_bad_name 1
+expect note btn_schedule → s_9_bad_name
+select s_9_bad_name
+wait 3
+move 1350 115
+wait 2
+down 0
+wait 1
+up 0
+wait 3
+
+keydown ctrl
+keydown a
+keyup a
+keyup ctrl
+wait 3
+
+text 한글이름
+wait 2
+click 720 730
+wait 5
+expect exists:s_9_bad_name 1
+expect note btn_schedule → s_9_bad_name
+select btn_start
+wait 3
+move 1400 385
+wait 2
+down 0
+wait 1
+up 0
+wait 3
+
+keydown ctrl
+keydown a
+keyup a
+keyup ctrl
+wait 3
+
+text 되돌림
+wait 2
+move 1194 24
+wait 2
+down 0
+wait 1
+up 0
+wait 3
+
+expect text:btn_start 정지
+select btn_start
+wait 3
+move 1400 385
+wait 2
+down 0
+wait 1
+up 0
+wait 3
+
+wait 2
+keydown enter
+keyup enter
+wait 3
+
+expect rev 3
+quit

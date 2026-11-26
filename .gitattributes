@@ -1,0 +1,8 @@
+* text=auto eol=lf
+*.bat text eol=crlf
+*.rc text eol=lf
+*.png binary
+*.jpg binary
+*.ttf binary
+*.ico binary
+assets/THIRD_PARTY_NOTICES.txt text eol=crlf

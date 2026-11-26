@@ -1,0 +1,66 @@
+wait 5
+expect fonts 14:29,20:4
+expect errors 0
+expect ime 0
+select lbl_title
+wait 3
+expect ime 0
+move 1350 415
+wait 2
+down 0
+wait 1
+up 0
+wait 3
+
+expect ime 1
+keydown ctrl
+keydown a
+keyup a
+keyup ctrl
+wait 3
+
+text 따뜻한 거실 22.5°C • ok
+wait 3
+expect text:lbl_title 따뜻한 거실 22.5°C • ok
+expect errors 0
+expect fonts 14:29,20:7
+keydown ctrl
+keydown a
+keyup a
+keyup ctrl
+wait 3
+
+text 이모지😀
+wait 3
+expect errors 1
+composestart
+wait 1
+click 720 730
+wait 5
+expect sel -
+expect ime 0
+expect note lbl_title 글자
+expect dirty 1
+keydown g
+keyup g
+wait 3
+
+keydown ctrl
+keydown z
+keyup z
+keyup ctrl
+wait 3
+
+expect text:lbl_title 거실
+expect errors 0
+expect fonts 14:29,20:4
+screen 1
+wait 5
+expect errors 0
+keydown t
+keyup t
+wait 3
+
+wait 6
+wait 1
+quit

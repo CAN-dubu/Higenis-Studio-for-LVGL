@@ -1,0 +1,86 @@
+wait 5
+dev 406 232
+wait 2
+down 0
+wait 1
+dev 400 228
+wait 1
+dev 380 205
+wait 2
+expect drag 1
+up 0
+wait 3
+expect xy:btn_start 328,184
+expect note btn_start 이동 (-28, -28)
+expect dirty 1
+keydown ctrl
+keydown z
+keyup z
+keyup ctrl
+wait 3
+
+expect xy:btn_start 356,212
+expect dirty 0
+keydown ctrl
+keydown y
+keyup y
+keyup ctrl
+wait 3
+
+expect xy:btn_start 328,184
+expect dirty 1
+select btn_schedule
+wait 3
+dev 336 252
+wait 2
+down 0
+wait 1
+dev 340 258
+wait 1
+dev 351 270
+wait 2
+up 0
+wait 3
+expect wh:btn_schedule 156,60
+keydown right
+keyup right
+wait 3
+keydown right
+keyup right
+wait 3
+keydown down
+keyup down
+wait 3
+
+expect xy:btn_schedule 198,213
+expect rev 3
+expect errors 1
+keydown ctrl
+keydown d
+keyup d
+keyup ctrl
+wait 3
+
+expect sel btn_schedule_2
+expect widgets 13
+keydown del
+keyup del
+wait 3
+
+expect widgets 12
+expect note btn_schedule_2 삭제
+dev 266 232
+wait 2
+down 0
+wait 1
+dev 200 150
+wait 2
+keydown esc
+keyup esc
+wait 3
+
+up 0
+wait 3
+expect xy:btn_schedule 198,213
+expect note btn_schedule_2 삭제
+quit

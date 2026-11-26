@@ -1,0 +1,61 @@
+wait 5
+move 201 133
+wait 2
+down 0
+wait 1
+up 0
+wait 3
+
+expect armed 2
+dev 40 224
+wait 2
+down 0
+wait 1
+dev 80 240
+wait 1
+dev 136 256
+wait 2
+up 0
+wait 3
+expect armed -1
+expect sel btn_1
+expect wh:btn_1 96,32
+expect xy:btn_1 40,224
+move 57 133
+wait 2
+down 0
+wait 1
+move 80 160
+wait 1
+dev 300 100
+wait 2
+up 0
+wait 3
+expect sel obj_1
+expect widgets 14
+move 201 313
+wait 2
+down 0
+wait 1
+move 220 330
+wait 1
+dev 300 100
+wait 2
+up 0
+wait 3
+expect sel led_1
+expect parent:led_1 obj_1
+keydown esc
+keyup esc
+wait 3
+
+expect sel -
+save rt_draw.hg
+wait 2
+load rt_draw.hg
+wait 4
+expect widgets 15
+expect parent:led_1 obj_1
+expect wh:btn_1 96,32
+expect dirty 0
+quit

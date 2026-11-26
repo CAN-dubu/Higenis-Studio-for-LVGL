@@ -1,0 +1,145 @@
+HG	1	Higenis Studio
+project	사흘 예보
+res	320	240	16
+theme	0	212C31
+about	그림 파일 없이 둥근 상자로 그린 해와 구름. 사흘치를 한눈에 봅니다.
+credit	배치 참고: nicholaswilde/cyd-weather-station (Apache-2.0)
+nextid	28
+screen	forecast	1	DEEBEF
+w	1	0	label	lbl_city	16	12	0	0	0	1	0	서울		0	0	100	0	2196F3
+s	default	text_color	2174001
+s	default	text_font	20
+w	2	0	label	lbl_time	-16	15	0	0	2	1	0	   09:40		0	0	100	0	2196F3
+s	default	text_color	6518148
+w	3	0	container	day_today	12	44	92	138	0	0	0			0	0	100	0	2196F3
+s	default	bg_color	16777215
+s	default	bg_opa	255
+s	default	border_width	0
+s	default	radius	12
+s	default	pad_all	0
+w	4	3	label	lbl_today	0	10	0	0	1	1	0	오늘		0	0	100	0	2196F3
+s	default	text_color	6518148
+w	5	3	container	sun_today	0	38	34	34	1	0	0			0	0	100	0	2196F3
+s	default	bg_color	15708713
+s	default	bg_opa	255
+s	default	border_width	0
+s	default	radius	17
+s	default	pad_all	0
+w	6	3	label	hi_today	0	84	0	0	1	1	0	24°		0	0	100	0	2196F3
+s	default	text_color	2174001
+s	default	text_font	22
+w	7	3	label	lo_today	0	112	0	0	1	1	0	16° 맑음		0	0	100	0	2196F3
+s	default	text_color	6518148
+s	default	text_font	12
+w	8	0	container	day_tmrw	114	44	92	138	0	0	0			0	0	100	0	2196F3
+s	default	bg_color	16777215
+s	default	bg_opa	255
+s	default	border_width	0
+s	default	radius	12
+s	default	pad_all	0
+w	9	8	label	lbl_tmrw	0	10	0	0	1	1	0	내일		0	0	100	0	2196F3
+s	default	text_color	6518148
+w	10	8	container	sun_tmrw	12	34	26	26	1	0	0			0	0	100	0	2196F3
+s	default	bg_color	15708713
+s	default	bg_opa	255
+s	default	border_width	0
+s	default	radius	13
+s	default	pad_all	0
+w	11	8	container	puff_tmrw	-6	40	24	24	1	0	0			0	0	100	0	2196F3
+s	default	bg_color	11386566
+s	default	bg_opa	255
+s	default	border_width	0
+s	default	radius	12
+s	default	pad_all	0
+w	12	8	container	cloud_tmrw	0	52	48	18	1	0	0			0	0	100	0	2196F3
+s	default	bg_color	11386566
+s	default	bg_opa	255
+s	default	border_width	0
+s	default	radius	9
+s	default	pad_all	0
+w	13	8	label	hi_tmrw	0	84	0	0	1	1	0	21°		0	0	100	0	2196F3
+s	default	text_color	2174001
+s	default	text_font	22
+w	14	8	label	lo_tmrw	0	112	0	0	1	1	0	15° 구름		0	0	100	0	2196F3
+s	default	text_color	6518148
+s	default	text_font	12
+w	15	0	container	day_next	216	44	92	138	0	0	0			0	0	100	0	2196F3
+s	default	bg_color	16777215
+s	default	bg_opa	255
+s	default	border_width	0
+s	default	radius	12
+s	default	pad_all	0
+w	16	15	label	lbl_next	0	10	0	0	1	1	0	모레		0	0	100	0	2196F3
+s	default	text_color	6518148
+w	17	15	container	puff_next	-6	34	24	24	1	0	0			0	0	100	0	2196F3
+s	default	bg_color	8100517
+s	default	bg_opa	255
+s	default	border_width	0
+s	default	radius	12
+s	default	pad_all	0
+w	18	15	container	cloud_next	0	46	48	18	1	0	0			0	0	100	0	2196F3
+s	default	bg_color	8100517
+s	default	bg_opa	255
+s	default	border_width	0
+s	default	radius	9
+s	default	pad_all	0
+w	19	15	container	drop0_next	-13	69	4	10	1	0	0			0	0	100	0	2196F3
+s	default	bg_color	4359861
+s	default	bg_opa	255
+s	default	border_width	0
+s	default	radius	2
+s	default	pad_all	0
+w	20	15	container	drop1_next	0	69	4	10	1	0	0			0	0	100	0	2196F3
+s	default	bg_color	4359861
+s	default	bg_opa	255
+s	default	border_width	0
+s	default	radius	2
+s	default	pad_all	0
+w	21	15	container	drop2_next	13	69	4	10	1	0	0			0	0	100	0	2196F3
+s	default	bg_color	4359861
+s	default	bg_opa	255
+s	default	border_width	0
+s	default	radius	2
+s	default	pad_all	0
+w	22	15	label	hi_next	0	84	0	0	1	1	0	18°		0	0	100	0	2196F3
+s	default	text_color	2174001
+s	default	text_font	22
+w	23	15	label	lo_next	0	112	0	0	1	1	0	13° 비		0	0	100	0	2196F3
+s	default	text_color	6518148
+s	default	text_font	12
+w	24	0	button	btn_now	8	192	73	40	0	0	0	지금		0	0	100	0	2196F3
+s	default	bg_color	14609391
+s	default	bg_opa	255
+s	default	border_width	0
+s	default	radius	10
+s	default	text_color	6518148
+s	default	pad_all	0
+s	default	shadow_width	0
+e	clicked	on_now
+w	25	0	button	btn_days	85	192	73	40	0	0	0	예보		0	0	100	0	2196F3
+s	default	bg_color	2174001
+s	default	bg_opa	255
+s	default	border_width	0
+s	default	radius	10
+s	default	text_color	16777215
+s	default	pad_all	0
+s	default	shadow_width	0
+e	clicked	on_days
+w	26	0	button	btn_hours	162	192	73	40	0	0	0	시간별		0	0	100	0	2196F3
+s	default	bg_color	14609391
+s	default	bg_opa	255
+s	default	border_width	0
+s	default	radius	10
+s	default	text_color	6518148
+s	default	pad_all	0
+s	default	shadow_width	0
+e	clicked	on_hours
+w	27	0	button	btn_setup	239	192	73	40	0	0	0	설정		0	0	100	0	2196F3
+s	default	bg_color	14609391
+s	default	bg_opa	255
+s	default	border_width	0
+s	default	radius	10
+s	default	text_color	6518148
+s	default	pad_all	0
+s	default	shadow_width	0
+e	clicked	on_setup

@@ -1,0 +1,30 @@
+#pragma code_page(65001)
+#include <winver.h>
+
+1 ICON "../assets/app.ico"
+
+VS_VERSION_INFO VERSIONINFO
+FILEVERSION 1,0,0,0
+PRODUCTVERSION 1,0,0,0
+FILEOS VOS_NT_WINDOWS32
+FILETYPE VFT_APP
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "041204B0"
+        BEGIN
+            VALUE "CompanyName", "Higenis"
+            VALUE "FileDescription", "Higenis Studio for LVGL"
+            VALUE "FileVersion", "1.0.0"
+            VALUE "InternalName", "HigenisStudio"
+            VALUE "LegalCopyright", "© 2026 Higenis"
+            VALUE "OriginalFilename", "HigenisStudio.exe"
+            VALUE "ProductName", "Higenis Studio for LVGL"
+            VALUE "ProductVersion", "1.0.0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x0412, 1200
+    END
+END

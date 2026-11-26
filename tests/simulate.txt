@@ -1,0 +1,404 @@
+wait 5
+expect dirty 0
+expect view 1.5
+keydown p
+keyup p
+wait 3
+wait 3
+expect view 0
+keydown p
+keyup p
+wait 3
+wait 3
+expect view 1.5
+keydown 1
+keyup 1
+wait 3
+wait 60
+expect view 0
+keydown 0
+keyup 0
+wait 3
+wait 60
+expect view 1.5
+select btn_start
+keydown f5
+keyup f5
+wait 3
+wait 6
+expect sim 1
+expect sel -
+expect simsheet home
+expect simlog 0
+expect simtext 0
+dev 406 232
+wait 2
+down 0
+wait 4
+up 0
+wait 8
+expect simlast btn_start/clicked/on_start//
+dev 400 108
+wait 2
+down 0
+wait 6
+up 0
+wait 8
+wait 20
+expect simlast sw_eco/value_changed///끔
+dev 400 108
+wait 2
+down 0
+wait 6
+up 0
+wait 8
+wait 20
+expect simlast sw_eco/value_changed///켬
+dev 353 180
+wait 2
+down 0
+wait 2
+dev 363 180
+wait 1
+dev 374 180
+wait 1
+dev 385 180
+wait 1
+dev 396 180
+wait 1
+dev 407 180
+wait 1
+dev 418 180
+wait 1
+dev 429 180
+wait 1
+dev 440 180
+wait 1
+wait 2
+up 0
+wait 8
+expect simlast sl_fan/value_changed///94
+dev 150 90
+wait 2
+down 0
+wait 2
+dev 152 95
+wait 1
+dev 154 100
+wait 1
+dev 156 105
+wait 1
+dev 159 110
+wait 1
+dev 161 115
+wait 1
+dev 163 120
+wait 1
+dev 165 125
+wait 1
+dev 168 130
+wait 1
+wait 2
+up 0
+wait 8
+wait 4
+dev 270 108
+wait 2
+down 0
+wait 4
+up 0
+wait 8
+wait 25
+dev 260 187
+wait 2
+down 0
+wait 4
+up 0
+wait 8
+wait 25
+expect simlast dd_mode/value_changed/on_mode_changed//냉방
+dev 250 230
+wait 2
+down 0
+wait 4
+up 0
+wait 8
+expect simsheet settings
+expect simlast btn_schedule/clicked//settings/
+expect simtext 0
+dev 120 120
+wait 2
+down 0
+wait 4
+up 0
+wait 8
+wait 6
+expect simtext 1
+text 우리집 5G
+wait 4
+expect simlast ta_ssid/value_changed///우리집 5G
+keydown back
+keyup back
+wait 3
+wait 2
+expect simlast ta_ssid/value_changed///우리집 5
+text p0
+wait 4
+expect simlast ta_ssid/value_changed///우리집 5p0
+expect view 1.5
+dev 100 205
+wait 2
+down 0
+wait 4
+up 0
+wait 8
+wait 12
+expect simlast cb_update/value_changed///끔
+expect simtext 0
+dev 386 120
+wait 2
+down 0
+wait 2
+dev 386 115
+wait 1
+dev 386 110
+wait 1
+dev 386 105
+wait 1
+dev 386 100
+wait 1
+dev 386 95
+wait 1
+dev 386 90
+wait 1
+dev 386 85
+wait 1
+dev 386 80
+wait 1
+wait 2
+up 0
+wait 8
+wait 60
+keydown ctrl
+keydown r
+keyup r
+keyup ctrl
+wait 3
+wait 8
+expect simsheet settings
+dev 386 240
+wait 2
+down 0
+wait 4
+up 0
+wait 8
+expect simsheet home
+keydown ctrl
+keydown tab
+keyup tab
+keyup ctrl
+wait 3
+wait 4
+expect simsheet settings
+move 130 118
+wait 2
+down 0
+wait 1
+up 0
+wait 4
+wait 4
+expect simsheet home
+move 224 303
+wait 2
+down 0
+wait 1
+up 0
+wait 4
+wait 2
+move 224 303
+wait 2
+down 0
+wait 1
+up 0
+wait 4
+wait 2
+keydown esc
+keyup esc
+wait 3
+wait 5
+expect sim 0
+expect sheet home
+expect widgets 12
+expect dirty 0
+expect rev 0
+expect revs 1
+expect errors 0
+expect sel -
+dev 406 232
+wait 2
+down 0
+wait 1
+up 0
+wait 3
+expect sel btn_start
+keydown right
+keyup right
+wait 3
+expect xy:btn_start 357,212
+keydown ctrl
+keydown z
+keyup z
+keyup ctrl
+wait 3
+expect dirty 0
+keydown ctrl
+keydown tab
+keyup tab
+keyup ctrl
+wait 3
+wait 3
+expect sheet settings
+keydown f5
+keyup f5
+wait 3
+wait 5
+expect simsheet settings
+dev 386 240
+wait 2
+down 0
+wait 4
+up 0
+wait 8
+expect simsheet home
+keydown f5
+keyup f5
+wait 3
+wait 4
+expect sim 0
+expect sheet settings
+keydown ctrl
+keydown tab
+keyup tab
+keyup ctrl
+wait 3
+wait 3
+select btn_schedule
+wait 3
+expect go:btn_schedule settings
+screen 1
+wait 3
+move 1300 114
+wait 2
+down 0
+wait 1
+up 0
+wait 4
+wait 3
+keydown ctrl
+keydown a
+keyup a
+keyup ctrl
+wait 3
+text setup
+wait 2
+keydown enter
+keyup enter
+wait 3
+wait 4
+expect sheet setup
+screen 0
+wait 3
+expect go:btn_schedule setup
+expect errors 0
+keydown ctrl
+keydown z
+keyup z
+keyup ctrl
+wait 3
+wait 3
+screen 0
+wait 2
+expect go:btn_schedule settings
+keydown ctrl
+keydown y
+keyup y
+keyup ctrl
+wait 3
+wait 3
+expect errors 0
+screen 1
+wait 3
+keydown f5
+keyup f5
+wait 3
+wait 4
+standard 0
+wait 8
+expect popup 1
+expect sim 1
+move 781 508
+wait 2
+down 0
+wait 1
+up 0
+wait 4
+wait 8
+expect sim 0
+expect project 온도 조절기
+expect sheet thermostat
+keydown f5
+keyup f5
+wait 3
+wait 5
+dev 307 139
+wait 2
+down 0
+wait 4
+up 0
+wait 8
+expect simlast btn_comfort/clicked/on_comfort//
+dev 94 236
+wait 2
+down 0
+wait 4
+up 0
+wait 8
+expect simlast btn_minus/clicked/on_minus//
+keydown esc
+keyup esc
+wait 3
+wait 3
+expect sim 0
+standard 6
+wait 8
+keydown f5
+keyup f5
+wait 3
+wait 5
+dev 20 20
+wait 2
+down 0
+wait 4
+up 0
+wait 8
+expect simlog 0
+dev 60 200
+wait 2
+down 0
+wait 4
+up 0
+wait 8
+expect simlog 0
+dev 180 258
+wait 2
+down 0
+wait 4
+up 0
+wait 8
+expect simlast btn_brew/clicked/on_brew//
+keydown esc
+keyup esc
+wait 3
+wait 4
+expect dirty 0
+quit

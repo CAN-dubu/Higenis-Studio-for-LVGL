@@ -1,0 +1,190 @@
+﻿Higenis Studio for LVGL
+© 2026 Higenis. All rights reserved for the parts written for this product.
+
+This product includes the third-party software and fonts listed below.
+Each is used under its own license, reproduced or referenced here.
+LVGL is a trademark of its respective owner. This product is not affiliated with
+or endorsed by the LVGL project.
+
+이 제품에는 아래의 외부 소프트웨어와 글꼴이 들어 있으며, 각각의 라이선스를 따릅니다.
+LVGL은 해당 권리자의 상표이며, 이 제품은 LVGL 프로젝트와 관계가 없습니다.
+
+  1. LVGL 9.6.0 ............................ MIT License
+  2. Dear ImGui 1.93.0 ...................... MIT License
+  3. stb_truetype 1.26, stb_image_write ..... MIT License or Public Domain
+  4. IBM Plex Sans KR ....................... SIL Open Font License 1.1
+  5. Barlow Condensed ....................... SIL Open Font License 1.1
+  6. Chivo Mono (static instance, weight 400) SIL Open Font License 1.1
+  7. Montserrat (subset) .................... SIL Open Font License 1.1
+  8. Font Awesome Free 5.15.4 (subset, "Higenis Symbols")
+                                              Fonts: SIL OFL 1.1 / Icons: CC BY 4.0
+  9. Standard drawings (표준도) — layout references only, no code or artwork copied
+
+
+==============================================================================
+1. LVGL 9.6.0 — https://lvgl.io
+==============================================================================
+
+MIT licence
+Copyright (c) 2025 LVGL Kft
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+==============================================================================
+2. Dear ImGui 1.93.0 — https://github.com/ocornut/imgui
+==============================================================================
+
+The MIT License (MIT)
+
+Copyright (c) 2014-2026 Omar Cornut
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+
+==============================================================================
+3. stb_truetype, stb_image_write — https://github.com/nothings/stb
+==============================================================================
+
+This software is available under 2 licenses -- choose whichever you prefer.
+------------------------------------------------------------------------------
+ALTERNATIVE A - MIT License
+Copyright (c) 2017 Sean Barrett
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+of the Software, and to permit persons to whom the Software is furnished to do
+so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+------------------------------------------------------------------------------
+ALTERNATIVE B - Public Domain (www.unlicense.org)
+This is free and unencumbered software released into the public domain.
+Anyone is free to copy, modify, publish, use, compile, sell, or distribute this
+software, either in source code form or as a compiled binary, for any purpose,
+commercial or non-commercial, and by any means.
+In jurisdictions that recognize copyright laws, the author or authors of this
+software dedicate any and all copyright interest in the software to the public
+domain. We make this dedication for the benefit of the public at large and to
+the detriment of our heirs and successors. We intend this dedication to be an
+overt act of relinquishment in perpetuity of all present and future rights to
+this software under copyright law.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+==============================================================================
+4–7. Fonts under the SIL Open Font License 1.1
+==============================================================================
+
+The following fonts are distributed in assets/fonts together with their license texts:
+
+  IBM Plex Sans KR (Light, Regular)   Copyright © 2017 IBM Corp. with Reserved Font Name "Plex"
+                                      License text: assets/fonts/OFL-plexkr.txt
+  Barlow Condensed (Regular, Medium)  Copyright 2017 The Barlow Project Authors
+                                      License text: assets/fonts/OFL-barlow.txt
+  Chivo Mono                          Copyright 2022 The Chivo Mono Project Authors
+                                      License text: assets/fonts/OFL-chivomono.txt
+  Montserrat (subset)                 Copyright 2011 The Montserrat Project Authors
+                                      License text: assets/fonts/OFL-montserrat.txt
+
+Chivo Mono and Montserrat were reduced (instanced / subsetted) for this product;
+they keep their original names because they carry no Reserved Font Name.
+Glyphs exported from IBM Plex Sans KR into user projects (ui_font.c) are
+accompanied by the full license text (ui_font_OFL.txt).
+
+
+==============================================================================
+8. Font Awesome Free 5.15.4 — https://fontawesome.com
+==============================================================================
+
+The symbol font assets/fonts/HigenisSymbols.ttf is a subset of Font Awesome Free 5.15.4
+(the same icons that LVGL uses for its LV_SYMBOL_* macros).
+Icons: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) — attribution: "Font Awesome by Fonticons, Inc."
+Fonts: SIL OFL 1.1. Full license: assets/fonts/LICENSE-fontawesome.txt
+
+Font Awesome Free License
+-------------------------
+
+Font Awesome Free is free, open source, and GPL friendly. You can use it for
+commercial projects, open source projects, or really almost whatever you want.
+Full Font Awesome Free license: https://fontawesome.com/license/free.
+
+# Icons: CC BY 4.0 License (https://creativecommons.org/licenses/by/4.0/)
+In the Font Awesome Free download, the CC BY 4.0 license applies to all icons
+packaged as SVG and JS file types.
+
+# Fonts: SIL OFL 1.1 License (https://scripts.sil.org/OFL)
+In the Font Awesome Free download, the SIL OFL license applies to all icons
+packaged as web and desktop font files.
+
+# Code: MIT License (https://opensource.org/licenses/MIT)
+In the Font Awesome Free download, the MIT license applies to all non-font and
+non-icon files.
+
+# Attribution
+Attribution is required by MIT, SIL OFL, and CC BY licenses. Downloaded Font
+Awesome Free files already contain embedded comments with sufficient
+attribution, so you shouldn't need to do anything additional when using these
+files normally.
+
+We've kept attribution comments terse, so we ask that you do not actively work
+to remove them from files, especially code. They're a great way for folks to
+learn about Font Awesome.
+
+# Brand Icons
+All brand icons are trademarks of their respective owners. The use of these
+trademarks does not indicate endorsement of the trademark holder by Font
+Awesome, nor vice versa. **Please do not use brand logos for any purpose except
+to represent the company, product, or service to which they refer.**
+
+
+==============================================================================
+9. Standard drawings (표준도)
+==============================================================================
+
+The bundled standard drawings borrow only screen layouts (arrangement of elements)
+from the public projects below. Colours, sizes, fonts and shapes are original,
+and no source code or artwork was copied. Credits are kept inside each drawing.
+
+  01 온도 조절기       Boisti13/esp32-s3-thermostat (MIT)
+  02 조명 타일         timsouth94/cyd-ha-dashboard (MIT)
+  03 방 제어           firsttris/esphome-room-panel (MIT)
+  04 가공기 상태판     jeyeager65/FluidTouch (MIT); colour principle from ISA-101
+  05 사흘 예보         nicholaswilde/cyd-weather-station (Apache-2.0)
+  06 PC 상태           jboucly/desk-monitor (MIT)
+  07 둥근 커피 머신    kaspizzo/lamarzocco (Apache-2.0)
+  08 전자종이 리모컨   Boisti13/papers3-dashboard (MIT)
+  09 네 칸 메뉴와 대기열  Slint printer demo (MIT)

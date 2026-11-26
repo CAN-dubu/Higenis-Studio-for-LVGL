@@ -1,0 +1,74 @@
+HG	1	Higenis Studio
+project	조명 타일
+res	320	240	16
+theme	1	C68A18
+about	방마다 한 장씩, 켜진 방만 밝게 떠오르는 타일 격자입니다.
+credit	배치 참고: timsouth94/cyd-ha-dashboard (MIT)
+nextid	23
+screen	lights	1	102018
+w	1	0	label	lbl_title	16	12	0	0	0	1	0	조명		0	0	100	0	2196F3
+s	default	text_color	15723486
+s	default	text_font	20
+w	2	0	label	lbl_count	-16	16	0	0	2	1	0	4개 중 3개 켜짐		0	0	100	0	2196F3
+s	default	text_color	9217692
+s	default	text_font	12
+w	3	0	container	tile_living	14	46	142	86	0	0	0			0	0	100	0	2196F3
+s	default	bg_color	15720365
+s	default	bg_opa	255
+s	default	border_width	0
+s	default	radius	12
+s	default	pad_all	0
+w	4	3	label	ico_living	14	13	0	0	0	1	0			0	0	100	0	2196F3
+s	default	text_color	10249480
+s	default	text_font	18
+w	5	3	switch	sw_living	-10	8	52	32	2	0	0			0	0	100	1	2196F3
+e	value_changed	on_living_toggled
+w	6	3	label	lbl_living	14	60	0	0	0	1	0	거실		0	0	100	0	2196F3
+s	default	text_color	2696208
+w	7	3	label	val_living	-14	60	0	0	2	1	0	80%		0	0	100	0	2196F3
+s	default	text_color	9201953
+w	8	0	container	tile_kitchen	164	46	142	86	0	0	0			0	0	100	0	2196F3
+s	default	bg_color	15720365
+s	default	bg_opa	255
+s	default	border_width	0
+s	default	radius	12
+s	default	pad_all	0
+w	9	8	label	ico_kitchen	14	13	0	0	0	1	0			0	0	100	0	2196F3
+s	default	text_color	10249480
+s	default	text_font	18
+w	10	8	switch	sw_kitchen	-10	8	52	32	2	0	0			0	0	100	1	2196F3
+e	value_changed	on_kitchen_toggled
+w	11	8	label	lbl_kitchen	14	60	0	0	0	1	0	주방		0	0	100	0	2196F3
+s	default	text_color	2696208
+w	12	8	label	val_kitchen	-14	60	0	0	2	1	0	100%		0	0	100	0	2196F3
+s	default	text_color	9201953
+w	13	0	container	tile_bedroom	14	142	142	86	0	0	0			0	0	100	0	2196F3
+s	default	bg_color	1585193
+s	default	bg_opa	255
+s	default	border_width	0
+s	default	radius	12
+s	default	pad_all	0
+w	14	13	label	ico_bedroom	14	13	0	0	0	1	0			0	0	100	0	2196F3
+s	default	text_color	6519155
+s	default	text_font	18
+w	15	13	switch	sw_bedroom	-10	8	52	32	2	0	0			0	0	100	0	2196F3
+e	value_changed	on_bedroom_toggled
+w	16	13	label	lbl_bedroom	14	60	0	0	0	1	0	침실		0	0	100	0	2196F3
+s	default	text_color	11914173
+w	17	13	label	val_bedroom	-14	60	0	0	2	1	0	꺼짐		0	0	100	0	2196F3
+s	default	text_color	7046779
+w	18	0	container	tile_study	164	142	142	86	0	0	0			0	0	100	0	2196F3
+s	default	bg_color	15720365
+s	default	bg_opa	255
+s	default	border_width	0
+s	default	radius	12
+s	default	pad_all	0
+w	19	18	label	ico_study	14	13	0	0	0	1	0			0	0	100	0	2196F3
+s	default	text_color	10249480
+s	default	text_font	18
+w	20	18	switch	sw_study	-10	8	52	32	2	0	0			0	0	100	1	2196F3
+e	value_changed	on_study_toggled
+w	21	18	label	lbl_study	14	60	0	0	0	1	0	서재		0	0	100	0	2196F3
+s	default	text_color	2696208
+w	22	18	label	val_study	-14	60	0	0	2	1	0	55%		0	0	100	0	2196F3
+s	default	text_color	9201953

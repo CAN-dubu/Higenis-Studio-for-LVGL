@@ -1,0 +1,133 @@
+wait 5
+move 100 493
+wait 2
+down 0
+wait 1
+move 100 504
+wait 1
+move 100 550
+wait 1
+move 100 555
+wait 3
+up 0
+wait 3
+expect index:lbl_title 2
+expect note lbl_title 순서 변경
+move 80 519
+wait 2
+down 0
+up 0
+wait 2
+down 0
+up 0
+wait 5
+
+keydown ctrl
+keydown a
+keyup a
+keyup ctrl
+wait 3
+
+text arc_main
+wait 1
+keydown enter
+keyup enter
+wait 3
+
+expect exists:arc_main 1
+expect note arc_temp → arc_main
+dev 266 232
+wait 2
+down 0
+up 0
+wait 2
+down 0
+up 0
+wait 5
+keydown ctrl
+keydown a
+keyup a
+keyup ctrl
+wait 3
+
+text 계획
+wait 1
+keydown enter
+keyup enter
+wait 3
+
+expect text:btn_schedule 계획
+move 493 24
+wait 2
+down 0
+wait 1
+up 0
+wait 3
+
+expect screens 3
+expect sheet screen_3
+expect widgets 0
+screen 0
+wait 3
+select btn_start
+wait 2
+keydown shift
+keydown right
+keyup right
+keyup shift
+wait 3
+keydown shift
+keydown right
+keyup right
+keyup shift
+wait 3
+keydown shift
+keydown right
+keyup right
+keyup shift
+wait 3
+
+expect errors 1
+move 1455 925
+wait 2
+down 0
+wait 1
+up 0
+wait 3
+
+expect popup 1
+keydown esc
+keyup esc
+wait 3
+
+expect popup 0
+expect sel btn_start
+move 1138 24
+wait 2
+down 0
+wait 1
+up 0
+wait 3
+
+expect popup 1
+keydown esc
+keyup esc
+wait 3
+
+expect popup 0
+keydown t
+keyup t
+wait 3
+
+expect trace 1
+keydown t
+keyup t
+wait 3
+
+expect trace 0
+keydown h
+keyup h
+wait 3
+
+expect hidden:btn_start 1
+quit

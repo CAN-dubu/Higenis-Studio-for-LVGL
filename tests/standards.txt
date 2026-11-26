@@ -1,0 +1,340 @@
+wait 5
+expect standards 9
+expect project 온도 조절기
+expect widgets 12
+keydown ctrl
+keydown shift
+keydown n
+keyup n
+keyup shift
+keyup ctrl
+wait 3
+wait 8
+expect popup 1
+expect stdsel 0
+keydown right
+keyup right
+wait 3
+expect stdsel 1
+keydown down
+keyup down
+wait 3
+expect stdsel 4
+keydown left
+keyup left
+wait 3
+expect stdsel 3
+keydown up
+keyup up
+wait 3
+expect stdsel 0
+keydown up
+keyup up
+wait 3
+expect stdsel 0
+keydown esc
+keyup esc
+wait 3
+wait 4
+expect popup 0
+expect widgets 12
+keydown ctrl
+keydown shift
+keydown n
+keyup n
+keyup shift
+keyup ctrl
+wait 3
+wait 8
+move 1089 225
+wait 2
+down 0
+wait 1
+up 0
+wait 3
+expect stdsel 2
+keydown enter
+keyup enter
+wait 3
+wait 6
+expect popup 0
+expect project 방 제어
+expect res 480x480
+expect widgets 43
+expect dirty 0
+expect revs 1
+expect errors 0
+expect advice 0
+keydown ctrl
+keydown shift
+keydown n
+keyup n
+keyup shift
+keyup ctrl
+wait 3
+wait 8
+move 755 425
+wait 2
+down 0
+up 0
+wait 2
+down 0
+up 0
+wait 5
+wait 6
+expect popup 0
+expect project 사흘 예보
+expect res 320x240
+select lbl_city
+wait 2
+keydown right
+keyup right
+wait 3
+expect dirty 1
+keydown ctrl
+keydown shift
+keydown n
+keyup n
+keyup shift
+keyup ctrl
+wait 3
+wait 8
+move 755 630
+wait 2
+down 0
+wait 1
+up 0
+wait 3
+keydown enter
+keyup enter
+wait 3
+wait 6
+expect popup 1
+expect project 사흘 예보
+keydown esc
+keyup esc
+wait 3
+wait 3
+expect popup 0
+expect project 사흘 예보
+expect dirty 1
+keydown ctrl
+keydown shift
+keydown n
+keyup n
+keyup shift
+keyup ctrl
+wait 3
+wait 8
+keydown enter
+keyup enter
+wait 3
+wait 6
+expect popup 1
+move 795 503
+wait 2
+down 0
+wait 1
+up 0
+wait 3
+wait 6
+expect popup 0
+expect project 전자종이 리모컨
+expect res 540x960
+expect dirty 0
+standard 0
+wait 8
+addstandard 1
+wait 4
+expect screens 1
+addstandard 0
+wait 4
+expect screens 2
+expect sheet thermostat_2
+expect widgets 16
+expect errors 0
+expect note 표준도 시트 온도 조절기
+keydown ctrl
+keydown z
+keyup z
+keyup ctrl
+wait 3
+expect screens 1
+expect dirty 0
+keydown ctrl
+keydown shift
+keydown n
+keyup n
+keyup shift
+keyup ctrl
+wait 3
+wait 8
+move 420 225
+wait 2
+down 0
+wait 1
+up 0
+wait 3
+move 1033 817
+wait 2
+down 0
+wait 1
+up 0
+wait 3
+wait 4
+expect popup 0
+expect screens 2
+keydown ctrl
+keydown shift
+keydown n
+keyup n
+keyup shift
+keyup ctrl
+wait 3
+wait 8
+move 755 225
+wait 2
+down 0
+wait 1
+up 0
+wait 3
+move 1033 817
+wait 2
+down 0
+wait 1
+up 0
+wait 3
+wait 4
+expect popup 1
+expect screens 2
+keydown esc
+keyup esc
+wait 3
+wait 3
+keydown ctrl
+keydown z
+keyup z
+keyup ctrl
+wait 3
+expect dirty 0
+standard 0
+wait 8
+select btn_comfort
+wait 4
+move 1482 384
+wait 2
+down 0
+wait 1
+up 0
+wait 3
+wait 4
+expect popup 1
+move 1169 427
+wait 2
+down 0
+wait 1
+up 0
+wait 3
+wait 4
+expect popup 0
+expect text:btn_comfort  쾌적
+expect note btn_comfort 기호
+move 1482 384
+wait 2
+down 0
+wait 1
+up 0
+wait 3
+wait 4
+move 1233 427
+wait 2
+down 0
+wait 1
+up 0
+wait 3
+wait 4
+expect text:btn_comfort  쾌적
+move 1482 384
+wait 2
+down 0
+wait 1
+up 0
+wait 3
+wait 4
+move 1182 620
+wait 2
+down 0
+wait 1
+up 0
+wait 3
+wait 4
+expect text:btn_comfort 쾌적
+keydown ctrl
+keydown z
+keyup z
+keyup ctrl
+wait 3
+expect text:btn_comfort  쾌적
+select arc_target
+wait 4
+expect checked:arc_target 0
+move 1323 454
+wait 2
+down 0
+wait 1
+up 0
+wait 3
+expect checked:arc_target 1
+expect note arc_target 게이지 켬
+expect st.arc_width:arc_target 14
+standard 6
+wait 6
+expect popup 1
+move 795 503
+wait 2
+down 0
+wait 1
+up 0
+wait 3
+wait 8
+expect popup 0
+expect round 1
+expect res 360x360
+move 1323 515
+wait 2
+down 0
+wait 1
+up 0
+wait 3
+expect round 0
+keydown ctrl
+keydown z
+keyup z
+keyup ctrl
+wait 3
+expect round 1
+expect dirty 0
+keydown ctrl
+keydown n
+keyup n
+keyup ctrl
+wait 3
+wait 6
+expect widgets 0
+move 727 518
+wait 2
+down 0
+wait 1
+up 0
+wait 3
+wait 8
+expect popup 1
+move 1248 105
+wait 2
+down 0
+wait 1
+up 0
+wait 3
+wait 4
+expect popup 0
+quit

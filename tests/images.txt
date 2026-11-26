@@ -1,0 +1,149 @@
+wait 6
+drop 600 400 @img/fake.png
+wait 3
+expect images 0
+expect dirty 0
+drop 440 460 @img/photo.jpg
+wait 6
+expect images 1
+expect widgets 13
+expect sel img_1
+expect image:img_1 photo.jpg 320x240
+expect wh:img_1 218,163
+expect note img_1 그림 photo.jpg
+expect errors 0
+expect fit:img_1 0
+expect place:img_1 0
+keydown ctrl
+keydown z
+keyup z
+keyup ctrl
+wait 3
+expect images 0
+expect widgets 12
+expect dirty 0
+keydown ctrl
+keydown y
+keyup y
+keyup ctrl
+wait 3
+expect images 1
+expect widgets 13
+select img_1
+wait 4
+shot @tmp_imt_1.png
+wait 1
+move 1364 520
+wait 2
+down 0
+wait 1
+up 0
+wait 5
+expect fit:img_1 1
+expect note img_1 맞추기 맞춤
+move 1450 520
+wait 2
+down 0
+wait 1
+up 0
+wait 5
+expect fit:img_1 3
+move 1386 694
+wait 2
+down 0
+wait 1
+up 0
+wait 5
+expect place:img_1 1
+expect note img_1 보관 SD 카드
+drop 1000 300 @img/로고.png
+wait 6
+expect images 2
+expect image:img_2 로고.png 96x96
+expect wh:img_2 96,96
+select img_1
+wait 4
+drop 420 420 @img/로고.png
+wait 6
+expect sel img_1
+expect images 3
+expect image:img_1 로고.png 96x96
+expect wh:img_1 218,163
+keydown ctrl
+keydown z
+keyup z
+keyup ctrl
+wait 3
+expect image:img_1 photo.jpg 320x240
+keydown ctrl
+keydown e
+keyup e
+keyup ctrl
+wait 3
+wait 8
+expect popup 1
+expect gen 11
+move 538 172
+wait 2
+down 0
+wait 1
+up 0
+wait 5
+wait 6
+expect gen 18
+shot @tmp_imt_2.png
+wait 1
+move 1103 313
+wait 2
+down 0
+wait 1
+up 0
+wait 5
+wait 4
+expect board:driver 1
+expect board:touch 1
+expect board:cs 15
+expect note 보드 CYD
+shot @tmp_imt_3.png
+wait 1
+keydown esc
+keyup esc
+wait 3
+wait 4
+expect popup 0
+keydown ctrl
+keydown z
+keyup z
+keyup ctrl
+wait 3
+expect board:driver 0
+expect board:touch 0
+save @tmp.hg
+load @tmp.hg
+wait 6
+expect images 2
+expect image:img_1 photo.jpg 320x240
+expect place:img_1 1
+expect fit:img_1 3
+expect errors 0
+keydown f5
+keyup f5
+wait 3
+wait 6
+expect sim 1
+keydown esc
+keyup esc
+wait 3
+wait 3
+expect sim 0
+select img_2
+wait 2
+keydown del
+keyup del
+wait 3
+wait 3
+save @tmp.hg
+load @tmp.hg
+wait 4
+expect images 1
+quit

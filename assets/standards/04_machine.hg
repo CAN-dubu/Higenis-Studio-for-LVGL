@@ -1,0 +1,211 @@
+HG	1	Higenis Studio
+project	가공기 상태판
+res	800	480	16
+theme	0	4A5563
+about	회색 바탕에 숫자를 크게. 색은 멈춤처럼 눈에 띄어야 할 것에만 씁니다.
+credit	배치 참고: jeyeager65/FluidTouch (MIT) · 색 원칙: ISA-101
+nextid	44
+screen	status	1	D6D7D6
+w	1	0	button	btn_tab_status	0	0	132	52	0	0	0	상태		0	0	100	0	2196F3
+s	default	bg_color	2171945
+s	default	bg_opa	255
+s	default	border_width	0
+s	default	radius	0
+s	default	text_color	16777215
+s	default	text_font	16
+s	default	pad_all	0
+s	default	shadow_width	0
+e	clicked	on_tab_status
+w	2	0	button	btn_tab_jog	134	0	132	52	0	0	0	수동		0	0	100	0	2196F3
+s	default	bg_color	13027270
+s	default	bg_opa	255
+s	default	border_width	0
+s	default	radius	0
+s	default	text_color	2171945
+s	default	text_font	16
+s	default	pad_all	0
+s	default	shadow_width	0
+e	clicked	on_tab_jog
+w	3	0	button	btn_tab_files	267	0	132	52	0	0	0	파일		0	0	100	0	2196F3
+s	default	bg_color	13027270
+s	default	bg_opa	255
+s	default	border_width	0
+s	default	radius	0
+s	default	text_color	2171945
+s	default	text_font	16
+s	default	pad_all	0
+s	default	shadow_width	0
+e	clicked	on_tab_files
+w	4	0	button	btn_tab_macro	400	0	132	52	0	0	0	매크로		0	0	100	0	2196F3
+s	default	bg_color	13027270
+s	default	bg_opa	255
+s	default	border_width	0
+s	default	radius	0
+s	default	text_color	2171945
+s	default	text_font	16
+s	default	pad_all	0
+s	default	shadow_width	0
+e	clicked	on_tab_macro
+w	5	0	button	btn_tab_term	533	0	132	52	0	0	0	터미널		0	0	100	0	2196F3
+s	default	bg_color	13027270
+s	default	bg_opa	255
+s	default	border_width	0
+s	default	radius	0
+s	default	text_color	2171945
+s	default	text_font	16
+s	default	pad_all	0
+s	default	shadow_width	0
+e	clicked	on_tab_term
+w	6	0	button	btn_tab_setup	666	0	134	52	0	0	0	설정		0	0	100	0	2196F3
+s	default	bg_color	13027270
+s	default	bg_opa	255
+s	default	border_width	0
+s	default	radius	0
+s	default	text_color	2171945
+s	default	text_font	16
+s	default	pad_all	0
+s	default	shadow_width	0
+e	clicked	on_tab_setup
+w	7	0	label	lbl_state	28	66	0	0	0	1	0	대기		0	0	100	0	2196F3
+s	default	text_color	2171945
+s	default	text_font	36
+w	8	0	label	lbl_state_sub	122	84	0	0	0	1	0	가공할 준비가 됐습니다		0	0	100	0	2196F3
+s	default	text_color	5923179
+s	default	text_font	16
+w	9	0	label	lbl_wcs	-28	66	0	0	2	1	0	G54		0	0	100	0	2196F3
+s	default	text_color	2171945
+s	default	text_font	36
+w	10	0	container	axes	28	124	496	232	0	0	0			0	0	100	0	2196F3
+s	default	bg_color	15198183
+s	default	bg_opa	255
+s	default	border_width	0
+s	default	radius	4
+s	default	pad_all	0
+w	11	10	label	lbl_work	84	10	0	0	0	1	0	작업 좌표		0	0	100	0	2196F3
+s	default	text_color	5923179
+s	default	text_font	12
+w	12	10	label	lbl_mach	320	10	0	0	0	1	0	기계 좌표		0	0	100	0	2196F3
+s	default	text_color	5923179
+s	default	text_font	12
+w	13	10	label	lbl_x	24	40	0	0	0	1	0	X		0	0	100	0	2196F3
+s	default	text_color	2171945
+s	default	text_font	28
+w	14	10	label	work_x	84	34	0	0	0	1	0	-90.000		0	0	100	0	2196F3
+s	default	text_color	2171945
+s	default	text_font	36
+w	15	10	label	mach_x	320	45	0	0	0	1	0	0.000		0	0	100	0	2196F3
+s	default	text_color	5923179
+s	default	text_font	22
+w	16	10	container	rule_x	20	88	456	1	0	0	0			0	0	100	0	2196F3
+s	default	bg_color	12435133
+s	default	bg_opa	255
+s	default	border_width	0
+s	default	radius	0
+s	default	pad_all	0
+w	17	10	label	lbl_y	24	106	0	0	0	1	0	Y		0	0	100	0	2196F3
+s	default	text_color	2171945
+s	default	text_font	28
+w	18	10	label	work_y	84	100	0	0	0	1	0	0.000		0	0	100	0	2196F3
+s	default	text_color	2171945
+s	default	text_font	36
+w	19	10	label	mach_y	320	111	0	0	0	1	0	0.000		0	0	100	0	2196F3
+s	default	text_color	5923179
+s	default	text_font	22
+w	20	10	container	rule_y	20	154	456	1	0	0	0			0	0	100	0	2196F3
+s	default	bg_color	12435133
+s	default	bg_opa	255
+s	default	border_width	0
+s	default	radius	0
+s	default	pad_all	0
+w	21	10	label	lbl_z	24	172	0	0	0	1	0	Z		0	0	100	0	2196F3
+s	default	text_color	2171945
+s	default	text_font	28
+w	22	10	label	work_z	84	166	0	0	0	1	0	12.500		0	0	100	0	2196F3
+s	default	text_color	2171945
+s	default	text_font	36
+w	23	10	label	mach_z	320	177	0	0	0	1	0	-38.200		0	0	100	0	2196F3
+s	default	text_color	5923179
+s	default	text_font	22
+w	24	0	container	modal	540	124	232	232	0	0	0			0	0	100	0	2196F3
+s	default	bg_color	15198183
+s	default	bg_opa	255
+s	default	border_width	0
+s	default	radius	4
+s	default	pad_all	0
+w	25	24	label	key_feed	18	16	0	0	0	1	0	이송		0	0	100	0	2196F3
+s	default	text_color	5923179
+w	26	24	label	val_feed	-18	14	0	0	2	1	0	1200 mm/분		0	0	100	0	2196F3
+s	default	text_color	2171945
+s	default	text_font	16
+w	27	24	label	key_spindle	18	52	0	0	0	1	0	주축		0	0	100	0	2196F3
+s	default	text_color	5923179
+w	28	24	label	val_spindle	-18	50	0	0	2	1	0	0 rpm		0	0	100	0	2196F3
+s	default	text_color	2171945
+s	default	text_font	16
+w	29	24	label	key_coolant	18	88	0	0	0	1	0	절삭유		0	0	100	0	2196F3
+s	default	text_color	5923179
+w	30	24	label	val_coolant	-18	86	0	0	2	1	0	꺼짐		0	0	100	0	2196F3
+s	default	text_color	2171945
+s	default	text_font	16
+w	31	24	label	key_tool	18	124	0	0	0	1	0	공구		0	0	100	0	2196F3
+s	default	text_color	5923179
+w	32	24	label	val_tool	-18	122	0	0	2	1	0	T0		0	0	100	0	2196F3
+s	default	text_color	2171945
+s	default	text_font	16
+w	33	24	label	key_unit	18	160	0	0	0	1	0	단위		0	0	100	0	2196F3
+s	default	text_color	5923179
+w	34	24	label	val_unit	-18	158	0	0	2	1	0	mm		0	0	100	0	2196F3
+s	default	text_color	2171945
+s	default	text_font	16
+w	35	24	label	key_plane	18	196	0	0	0	1	0	평면		0	0	100	0	2196F3
+s	default	text_color	5923179
+w	36	24	label	val_plane	-18	194	0	0	2	1	0	G17		0	0	100	0	2196F3
+s	default	text_color	2171945
+s	default	text_font	16
+w	37	0	container	message	28	368	744	36	0	0	0			0	0	100	0	2196F3
+s	default	bg_color	15198183
+s	default	bg_opa	255
+s	default	border_width	0
+s	default	radius	4
+s	default	pad_all	0
+w	38	37	label	lbl_message	18	0	0	0	3	1	0	   상태 보고 간격 250 ms		0	0	100	0	2196F3
+s	default	text_color	5923179
+w	39	0	container	bar	0	416	800	64	0	0	0			0	0	100	0	2196F3
+s	default	bg_color	2171945
+s	default	bg_opa	255
+s	default	border_width	0
+s	default	radius	0
+s	default	pad_all	0
+w	40	39	label	lbl_job	28	0	0	0	3	1	0	불러온 작업 없음		0	0	100	0	2196F3
+s	default	text_color	13029326
+s	default	text_font	16
+w	41	39	button	btn_run	424	10	112	44	0	0	0	  시작		0	0	100	0	2196F3
+s	default	bg_color	15198183
+s	default	bg_opa	255
+s	default	border_width	0
+s	default	radius	4
+s	default	text_color	2171945
+s	default	text_font	16
+s	default	pad_all	0
+s	default	shadow_width	0
+e	clicked	on_run
+w	42	39	button	btn_hold	544	10	124	44	0	0	0	  일시 정지		0	0	100	0	2196F3
+s	default	bg_color	15198183
+s	default	bg_opa	255
+s	default	border_width	0
+s	default	radius	4
+s	default	text_color	2171945
+s	default	text_font	16
+s	default	pad_all	0
+s	default	shadow_width	0
+e	clicked	on_hold
+w	43	39	button	btn_stop	676	10	96	44	0	0	0	  정지		0	0	100	0	2196F3
+s	default	bg_color	12990505
+s	default	bg_opa	255
+s	default	border_width	0
+s	default	radius	4
+s	default	text_color	16777215
+s	default	text_font	16
+s	default	pad_all	0
+s	default	shadow_width	0
+e	clicked	on_stop

@@ -1,0 +1,105 @@
+wait 5
+move 100 779
+wait 2
+down 0
+wait 1
+up 0
+wait 3
+
+expect sel btn_start
+move 1290 198
+wait 2
+down 0
+wait 1
+move 1300 198
+wait 1
+move 1320 198
+wait 2
+up 0
+wait 3
+expect xy:btn_start 366,212
+expect note btn_start X 366
+move 1290 226
+wait 2
+down 0
+wait 1
+up 0
+wait 3
+
+wait 2
+text 120
+wait 2
+keydown enter
+keyup enter
+wait 3
+
+expect wh:btn_start 120,40
+move 1400 385
+wait 2
+down 0
+wait 1
+up 0
+wait 3
+
+keydown ctrl
+keydown a
+keyup a
+keyup ctrl
+wait 3
+
+text 켜기
+wait 2
+keydown enter
+keyup enter
+wait 3
+
+expect text:btn_start 켜기
+expect note btn_start 글자
+move 1255 294
+wait 2
+down 0
+wait 1
+up 0
+wait 3
+
+expect align:btn_start 8
+expect abs:btn_start 366,212,120,40
+move 1269 517
+wait 2
+down 0
+wait 1
+up 0
+wait 3
+
+move 1400 852
+wait 2
+down 0
+wait 1
+up 0
+wait 3
+
+expect popup 1
+move 1300 545
+wait 1
+down 0
+wait 1
+move 1390 595
+wait 2
+up 0
+wait 3
+keydown esc
+keyup esc
+wait 3
+
+expect popup 0
+expect pressedbg:btn_start changed
+expect note btn_start 눌림 배경색
+expect sel btn_start
+keydown ctrl
+keydown z
+keyup z
+keyup ctrl
+wait 3
+
+expect pressedbg:btn_start original
+quit

@@ -1,0 +1,41 @@
+wait 5
+select btn_start
+wait 2
+keydown right
+keyup right
+wait 3
+
+keydown ctrl
+keydown n
+keyup n
+keyup ctrl
+wait 3
+
+wait 6
+expect popup 1
+keydown esc
+keyup esc
+wait 3
+
+wait 2
+expect popup 0
+expect widgets 12
+expect dirty 1
+keydown ctrl
+keydown n
+keyup n
+keyup ctrl
+wait 3
+
+wait 6
+move 795 503
+wait 2
+down 0
+wait 1
+up 0
+wait 3
+
+wait 5
+expect widgets 0
+expect dirty 0
+quit

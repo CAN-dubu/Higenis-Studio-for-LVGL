@@ -1,0 +1,161 @@
+HG	1	Higenis Studio
+project	네 칸 메뉴와 대기열
+res	800	480	16
+theme	0	D65942
+about	큰 메뉴 네 칸에서 시작하고, 오른쪽에서 지금 하는 일을 지켜봅니다.
+credit	배치 참고: Slint 프린터 데모 (MIT)
+nextid	34
+screen	menu	1	F7F3EF
+w	1	0	container	side	0	0	76	480	0	0	0			0	0	100	0	2196F3
+s	default	bg_color	2699321
+s	default	bg_opa	255
+s	default	border_width	0
+s	default	radius	0
+s	default	pad_all	0
+w	2	1	button	btn_home	12	20	52	52	0	0	0			0	0	100	0	2196F3
+s	default	bg_color	14047554
+s	default	bg_opa	255
+s	default	border_width	0
+s	default	radius	14
+s	default	text_color	16777215
+s	default	text_font	20
+s	default	pad_all	0
+s	default	shadow_width	0
+e	clicked	on_home
+w	3	1	button	btn_setup	12	84	52	52	0	0	0			0	0	100	0	2196F3
+s	default	bg_color	2699321
+s	default	bg_opa	255
+s	default	border_width	0
+s	default	radius	14
+s	default	text_color	10859197
+s	default	text_font	20
+s	default	pad_all	0
+s	default	shadow_width	0
+e	clicked	on_setup
+w	4	1	button	btn_ink	12	148	52	52	0	0	0			0	0	100	0	2196F3
+s	default	bg_color	2699321
+s	default	bg_opa	255
+s	default	border_width	0
+s	default	radius	14
+s	default	text_color	10859197
+s	default	text_font	20
+s	default	pad_all	0
+s	default	shadow_width	0
+e	clicked	on_ink
+w	5	0	label	lbl_title	104	26	0	0	0	1	0	무엇을 할까요		0	0	100	0	2196F3
+s	default	text_color	2172977
+s	default	text_font	28
+w	6	0	container	tile_print	104	84	196	174	0	0	0			0	0	100	0	2196F3
+s	default	bg_color	14047554
+s	default	bg_opa	255
+s	default	border_width	0
+s	default	radius	18
+s	default	pad_all	0
+e	clicked	on_print
+w	7	6	label	ico_print	24	28	0	0	0	1	0			0	0	100	0	2196F3
+s	default	text_color	16777215
+s	default	text_font	48
+w	8	6	label	lbl_print	24	-22	0	0	6	1	0	인쇄		0	0	100	0	2196F3
+s	default	text_color	16777215
+s	default	text_font	24
+w	9	0	container	tile_scan	312	84	196	174	0	0	0			0	0	100	0	2196F3
+s	default	bg_color	3243379
+s	default	bg_opa	255
+s	default	border_width	0
+s	default	radius	18
+s	default	pad_all	0
+e	clicked	on_scan
+w	10	9	label	ico_scan	24	28	0	0	0	1	0			0	0	100	0	2196F3
+s	default	text_color	16777215
+s	default	text_font	48
+w	11	9	label	lbl_scan	24	-22	0	0	6	1	0	스캔		0	0	100	0	2196F3
+s	default	text_color	16777215
+s	default	text_font	24
+w	12	0	container	tile_copy	104	270	196	174	0	0	0			0	0	100	0	2196F3
+s	default	bg_color	14593610
+s	default	bg_opa	255
+s	default	border_width	0
+s	default	radius	18
+s	default	pad_all	0
+e	clicked	on_copy
+w	13	12	label	ico_copy	24	28	0	0	0	1	0			0	0	100	0	2196F3
+s	default	text_color	2695192
+s	default	text_font	48
+w	14	12	label	lbl_copy	24	-22	0	0	6	1	0	복사		0	0	100	0	2196F3
+s	default	text_color	2695192
+s	default	text_font	24
+w	15	0	container	tile_usb	312	270	196	174	0	0	0			0	0	100	0	2196F3
+s	default	bg_color	4349324
+s	default	bg_opa	255
+s	default	border_width	0
+s	default	radius	18
+s	default	pad_all	0
+e	clicked	on_usb
+w	16	15	label	ico_usb	24	28	0	0	0	1	0			0	0	100	0	2196F3
+s	default	text_color	16777215
+s	default	text_font	48
+w	17	15	label	lbl_usb	24	-22	0	0	6	1	0	USB		0	0	100	0	2196F3
+s	default	text_color	16777215
+s	default	text_font	24
+w	18	0	container	queue	536	0	264	480	0	0	0			0	0	100	0	2196F3
+s	default	bg_color	16777215
+s	default	bg_opa	255
+s	default	border_width	0
+s	default	radius	0
+s	default	pad_all	0
+w	19	18	label	lbl_queue	24	28	0	0	0	1	0	대기열		0	0	100	0	2196F3
+s	default	text_color	2172977
+s	default	text_font	20
+w	20	18	label	lbl_queue_n	-24	32	0	0	2	1	0	4건		0	0	100	0	2196F3
+s	default	text_color	8093060
+w	21	18	container	job_a	24	76	216	84	0	0	0			0	0	100	0	2196F3
+s	default	bg_color	16249839
+s	default	bg_opa	255
+s	default	border_width	0
+s	default	radius	12
+s	default	pad_all	0
+w	22	21	label	st_a	16	13	0	0	0	1	0	인쇄 중 57%		0	0	100	0	2196F3
+s	default	text_color	12994865
+s	default	text_font	12
+w	23	21	label	fn_a	16	32	0	0	0	1	0	회의 자료.pdf		0	0	100	0	2196F3
+s	default	text_color	2172977
+s	default	text_font	16
+w	24	21	bar	bar_a	16	64	184	6	0	0	0			57	0	100	0	2196F3
+s	default	bg_color	15195094
+s	default	bg_opa	255
+w	25	18	container	job_b	24	172	216	84	0	0	0			0	0	100	0	2196F3
+s	default	bg_color	16249839
+s	default	bg_opa	255
+s	default	border_width	0
+s	default	radius	12
+s	default	pad_all	0
+w	26	25	label	st_b	16	13	0	0	0	1	0	기다리는 중		0	0	100	0	2196F3
+s	default	text_color	8093060
+s	default	text_font	12
+w	27	25	label	fn_b	16	32	0	0	0	1	0	주소록.docx		0	0	100	0	2196F3
+s	default	text_color	2172977
+s	default	text_font	16
+w	28	18	container	job_c	24	268	216	84	0	0	0			0	0	100	0	2196F3
+s	default	bg_color	16249839
+s	default	bg_opa	255
+s	default	border_width	0
+s	default	radius	12
+s	default	pad_all	0
+w	29	28	label	st_c	16	13	0	0	0	1	0	기다리는 중		0	0	100	0	2196F3
+s	default	text_color	8093060
+s	default	text_font	12
+w	30	28	label	fn_c	16	32	0	0	0	1	0	급여 명세.pdf		0	0	100	0	2196F3
+s	default	text_color	2172977
+s	default	text_font	16
+w	31	18	container	job_d	24	364	216	84	0	0	0			0	0	100	0	2196F3
+s	default	bg_color	16249839
+s	default	bg_opa	255
+s	default	border_width	0
+s	default	radius	12
+s	default	pad_all	0
+w	32	31	label	st_d	16	13	0	0	0	1	0	기다리는 중		0	0	100	0	2196F3
+s	default	text_color	8093060
+s	default	text_font	12
+w	33	31	label	fn_d	16	32	0	0	0	1	0	전시 안내.pdf		0	0	100	0	2196F3
+s	default	text_color	2172977
+s	default	text_font	16
