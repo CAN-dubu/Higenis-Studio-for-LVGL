@@ -335,6 +335,20 @@ int32_t evaluate(lv_draw_unit_t*, lv_draw_task_t* t) {
         auto it = g_layers.find((lv_layer_t*)d->src);
         if (it == g_layers.end()) break;
         Big& s = *it->second;
+        if (d->rotation != 0 || d->scale_x != LV_SCALE_NONE || d->scale_y != LV_SCALE_NONE || d->skew_x != 0 || d->skew_y != 0) {
+            // 움직임의 크기·회전: LVGL처럼 층을 그림으로 보고 변환해 그린다(축은 같은 배율로)
+            lv_draw_image_dsc_t nd = *d;
+            nd.src = s.buf;
+            nd.pivot.x = (int32_t)lroundf(d->pivot.x * g_k);
+            nd.pivot.y = (int32_t)lroundf(d->pivot.y * g_k);
+            nd.image_area = s.layer.buf_area;
+            nd.clip_radius = radius(d->clip_radius);
+            nd.bitmap_mask_src = nullptr;
+            T.draw_dsc = &nd;
+            lv_draw_sw_image(&T, &nd, &s.layer.buf_area);
+            g_layers.erase(it);
+            break;
+        }
         lv_draw_sw_blend_dsc_t bd;
         memset(&bd, 0, sizeof bd);
         bd.blend_area = &s.layer.buf_area;
