@@ -112,12 +112,14 @@ struct ImageAsset {
 
 // 아두이노 보드 설정. -1은 쓰지 않음
 struct Board {
-    int driver = 0, rotation = 1, mhz = 40;             // 0 TFT_eSPI, 1 Adafruit ILI9341, 2 Adafruit ST7789, 3 직접
+    int driver = 0, rotation = 1, mhz = 40;             // 0 TFT_eSPI, 1 Adafruit ILI9341, 2 Adafruit ST7789, 3 직접, 4 JD9165 MIPI-DSI(ESP32-P4)
     int sck = 14, mosi = 13, miso = 12, cs = 15, dc = 2, rst = -1, bl = 21, invert = 0;
-    int touch = 0, tcs = 33, tirq = 36, tsck = 25, tmosi = 32, tmiso = 39;   // 0 없음, 1 XPT2046, 2 TFT_eSPI
+    int touch = 0, tcs = 33, tirq = 36, tsck = 25, tmosi = 32, tmiso = 39;   // 0 없음, 1 XPT2046, 2 TFT_eSPI, 3 GT911(I²C)
     int tx0 = 200, tx1 = 3700, ty0 = 240, ty1 = 3800, tswap = 0;
+    int tsda = 7, tscl = 8, trst = 22, tint = 21;        // GT911
     int buf = 0, dbl = 0, psram = 0, period = 33;
     int sd = 0, sdcs = 5, sdsck = 18, sdmosi = 23, sdmiso = 19, sdmhz = 20;
+    int sdmmc = 0, sdclk = 43, sdcmd = 44, sdd0 = 39, sdd1 = 40, sdd2 = 41, sdd3 = 42;   // 1: SDMMC 4비트(ESP32-P4·S3)
 };
 struct BoardField { const char* key; int Board::*p; };
 extern const BoardField kBoardFields[];
@@ -202,6 +204,8 @@ std::vector<GenFile> generateArduino(const Document& d, const std::string& rev);
 std::string sketchName(const Document& d);
 bool usesSd(const Document& d);
 const char* boardDriverKo(int d);
+const char* boardTouchKo(int t);
+void boardPresetJC1060(Board& b);
 const char* boardBufKo(int b);
 int boardBufLines(const Document& d);
 int writeFiles(const std::vector<GenFile>& files, const std::wstring& dir, int& kept);   // 쓴 파일 수

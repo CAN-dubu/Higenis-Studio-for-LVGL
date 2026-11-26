@@ -93,7 +93,13 @@ wait 6
 expect gen 18
 shot @tmp_imt_2.png
 wait 1
-move 1103 313
+move 1180 176
+wait 2
+down 0
+wait 1
+up 0
+wait 5
+move 1200 210
 wait 2
 down 0
 wait 1

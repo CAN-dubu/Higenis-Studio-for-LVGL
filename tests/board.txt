@@ -1,0 +1,67 @@
+# 아두이노 보드: JC1060P470(ESP32-P4) 미리 채우기, 도면 크기 맞추기, 되돌리기
+wait 10
+expect res 480x272
+keydown ctrl
+keydown e
+keyup e
+keyup ctrl
+wait 10
+expect popup 1
+# 아두이노 탭
+move 538 172
+wait 2
+down 0
+wait 1
+up 0
+wait 10
+# 보드 목록을 열고 JC1060P470
+move 1180 176
+wait 2
+down 0
+wait 1
+up 0
+wait 6
+move 1200 237
+wait 2
+down 0
+wait 1
+up 0
+wait 8
+expect board:driver 4
+expect board:touch 3
+expect board:sdmmc 1
+expect board:rst 27
+expect board:bl 23
+expect board:tsda 7
+expect board:tscl 8
+expect board:period 16
+expect note 보드 JC1060P470
+# 도면을 패널 크기로
+move 1000 325
+wait 2
+down 0
+wait 1
+up 0
+wait 8
+expect res 1024x600
+expect gen 17
+# 되돌리면 도면 크기, 그다음 보드
+keydown esc
+keyup esc
+wait 6
+expect popup 0
+keydown ctrl
+keydown z
+keyup z
+keyup ctrl
+wait 4
+expect res 480x272
+expect board:driver 4
+keydown ctrl
+keydown z
+keyup z
+keyup ctrl
+wait 4
+expect board:driver 0
+expect board:touch 0
+quit

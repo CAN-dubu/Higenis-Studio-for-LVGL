@@ -19,6 +19,8 @@ LVGL은 해당 권리자의 상표이며, 이 제품은 LVGL 프로젝트와 관
   8. Font Awesome Free 5.15.4 (subset, "Higenis Symbols")
                                               Fonts: SIL OFL 1.1 / Icons: CC BY 4.0
   9. Standard drawings (표준도) — layout references only, no code or artwork copied
+ 10. JD9165 panel initialization table (Arduino export for JC1060P470)
+                                              Apache License 2.0
 
 
 ==============================================================================
@@ -188,3 +190,19 @@ and no source code or artwork was copied. Credits are kept inside each drawing.
   07 둥근 커피 머신    kaspizzo/lamarzocco (Apache-2.0)
   08 전자종이 리모컨   Boisti13/papers3-dashboard (MIT)
   09 네 칸 메뉴와 대기열  Slint printer demo (MIT)
+
+
+==============================================================================
+10. JD9165 panel initialization table
+==============================================================================
+
+When a sketch is exported for the JD9165 MIPI-DSI panel (JC1060P470 board), the
+generated higenis_port.cpp contains the panel's vendor initialization command
+table taken from esp_lcd_jd9165.c, shipped with the board maker's example code:
+
+  SPDX-FileCopyrightText: 2024 Espressif Systems (Shanghai) CO LTD
+  SPDX-License-Identifier: Apache-2.0
+
+Only the command/value table was reused; the driver code around it was written
+for this product using the public ESP-IDF esp_lcd API.
+License text: assets/licenses/Apache-2.0.txt (also written into exported sketches as LICENSE-jd9165.txt)

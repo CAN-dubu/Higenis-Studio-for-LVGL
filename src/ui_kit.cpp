@@ -837,13 +837,23 @@ int fieldMultiline(const char* id, std::string* s, float width, float height) {
     return done;
 }
 
+void endComboField() {
+    ImGui::PopStyleVar();
+    ImGui::EndCombo();
+}
 bool comboField(const char* id, const char* preview, float width) {
     ImGui::SetNextItemWidth(width);
     ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(px(2), px(5)));
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(px(12), px(10)));
     ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
     ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0, 0, 0, 0));
+    // 펼친 목록: 뒤의 내용과 섞이지 않게 흰 종이에 검은 테두리 (창 안에서 테두리를 꺼 둔 경우에도)
+    ImGui::PushStyleVar(ImGuiStyleVar_PopupBorderSize, 1.f);
+    ImGui::PushStyleColor(ImGuiCol_PopupBg, ImVec4(1.f, 0.995f, 0.98f, 1.f));
+    ImGui::PushStyleColor(ImGuiCol_Border, ImGui::ColorConvertU32ToFloat4(col::ink2));
     bool open = ImGui::BeginCombo(id, preview, ImGuiComboFlags_HeightLarge | ImGuiComboFlags_NoArrowButton);
+    ImGui::PopStyleColor(2);
+    ImGui::PopStyleVar();
     if (!open) {
         ImVec2 a = ImGui::GetItemRectMin(), b = ImGui::GetItemRectMax();
         ImDrawList* dl = ImGui::GetWindowDrawList();
@@ -855,5 +865,6 @@ bool comboField(const char* id, const char* preview, float width) {
     }
     ImGui::PopStyleColor(2);
     ImGui::PopStyleVar(2);
+    if (open) ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(px(8), px(10)));   // 목록 줄 사이를 넉넉히 (endComboField에서 푼다)
     return open;
 }

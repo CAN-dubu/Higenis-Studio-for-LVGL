@@ -840,7 +840,7 @@ bool loadDocument(Document& out, const std::wstring& path, std::string& err) {
     d.nextId = std::max(d.nextId, 1);
     {   // 보드 설정은 쓸 수 있는 범위로
         Board& bd = d.board;
-        bd.driver = std::clamp(bd.driver, 0, 3); bd.rotation = std::clamp(bd.rotation, 0, 3); bd.touch = std::clamp(bd.touch, 0, 2);
+        bd.driver = std::clamp(bd.driver, 0, 4); bd.rotation = std::clamp(bd.rotation, 0, 3); bd.touch = std::clamp(bd.touch, 0, 3); bd.sdmmc = std::clamp(bd.sdmmc, 0, 1);
         bd.buf = std::clamp(bd.buf, 0, 3); bd.period = std::clamp(bd.period, 5, 500); bd.mhz = std::clamp(bd.mhz, 1, 80); bd.sdmhz = std::clamp(bd.sdmhz, 1, 40);
     }
     for (auto& s : d.screens)

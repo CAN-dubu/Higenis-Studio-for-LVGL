@@ -1227,7 +1227,7 @@ static void drawImageProps(Widget& w, float W) {
             if (comboField("##pickimg", w.text.c_str(), ImGui::GetContentRegionAvail().x)) {
                 for (auto& x : g.doc.images)
                     if (ImGui::Selectable((x->name + "   " + x->file).c_str(), x->name == w.text)) { w.text = x->name; commit(w.name + " 그림 " + x->file); }
-                ImGui::EndCombo();
+                endComboField();
             }
         }
         fieldLabel("맞추기");
@@ -1347,7 +1347,7 @@ static void styleRow(Widget& w, int st, int p) {
                 snprintf(it, sizeof it, "%d px", kFontSizes[k]);
                 if (ImGui::Selectable(it, sv.set && sv.v == kFontSizes[k])) { sv = {true, kFontSizes[k]}; commit(b); }
             }
-            ImGui::EndCombo();
+            endComboField();
         }
         ImGui::PopFont();
     } else if (pi.kind == SK_FACE) {
@@ -1379,7 +1379,7 @@ static void styleRow(Widget& w, int st, int p) {
                     else showToast("글꼴 파일을 열 수 없습니다 · " + file);
                 }
             }
-            ImGui::EndCombo();
+            endComboField();
         }
         ImGui::PopFont();
         if (cur && (*cur)->restricted) noteText("이 글꼴은 내장을 제한하고 있습니다. 배포 전에 사용 조건을 확인하세요.");
@@ -1390,7 +1390,7 @@ static void styleRow(Widget& w, int st, int p) {
         if (combo(names[sv.set ? sv.v & 3 : 0])) {
             for (int i = 0; i < 4; i++)
                 if (ImGui::Selectable(names[i], sv.set ? sv.v == i : i == 0)) { sv = {i != 0, i}; commit(b + std::string(" ") + names[i]); }
-            ImGui::EndCombo();
+            endComboField();
         }
         ImGui::PopFont();
     } else if (pi.kind == SK_PCT) {
@@ -1678,7 +1678,7 @@ static void drawWidgetProps(Widget& w) {
                     snprintf(it, sizeof it, "%s  %s", eventKo(c), eventLv(c));
                     if (ImGui::Selectable(it, c == e.code)) { e.code = c; commit(w.name + " 주기 " + eventKo(c)); }
                 }
-                ImGui::EndCombo();
+                endComboField();
             }
             ImGui::PopFont();
             ImGui::SameLine(0, px(4));
@@ -1712,7 +1712,7 @@ static void drawWidgetProps(Widget& w) {
                         snprintf(it, sizeof it, "%02d  %s", si + 1, g.doc.screens[si].name.c_str());
                         if (ImGui::Selectable(it, g.doc.screens[si].name == e.go)) { e.go = g.doc.screens[si].name; commit(w.name + " 이동 → " + e.go); }
                     }
-                    ImGui::EndCombo();
+                    endComboField();
                 }
                 ImGui::PopFont();
             }
@@ -2081,7 +2081,7 @@ static bool drawBoard() {
         fieldLabel(label);
         if (comboField((std::string("##") + label).c_str(), name(*v), W - px(96))) {
             for (int i = 0; i < n; i++) if (ImGui::Selectable(name(i), i == *v) && i != *v) { *v = i; done(label); }
-            ImGui::EndCombo();
+            endComboField();
         }
     };
     auto num = [&](const char* label, int* v, int mn, int mx) {
@@ -2105,8 +2105,25 @@ static bool drawBoard() {
         if (toggleField((std::string("##f") + label).c_str(), &on)) { *v = on ? 1 : 0; done(label); }
     };
 
-    sectionHeader("01", "화면", "-1은 안 씀");
-    combo("드라이버", &bd.driver, 4, boardDriverKo);
+    // 알려진 보드는 한 번에 채운다
+    fieldLabel("보드");
+    if (comboField("##preset", "알려진 보드로 채우기…", W - px(96))) {
+        if (ImGui::Selectable("CYD  ·  ESP32-2432S028 (2.8인치 320×240)")) {
+            const int keepBuf = bd.buf, keepDbl = bd.dbl, keepPer = bd.period;
+            bd = Board();
+            bd.driver = 1; bd.touch = 1;
+            bd.buf = keepBuf; bd.dbl = keepDbl; bd.period = keepPer;
+            done("CYD");
+        }
+        if (ImGui::Selectable("JC1060P470  ·  ESP32-P4 (7인치 1024×600)")) {
+            boardPresetJC1060(bd);
+            done("JC1060P470");
+        }
+        endComboField();
+    }
+    gap(10);
+    sectionHeader("01", "화면", "핀 -1은 안 씀");
+    combo("드라이버", &bd.driver, 5, boardDriverKo);
     combo("방향", &bd.rotation, 4, [](int i) { static const char* k[] = {"0  세로", "1  가로", "2  세로 뒤집힘", "3  가로 뒤집힘"}; return k[i & 3]; });
     auto warn = [&](const char* t) {
         ImGui::PushStyleColor(ImGuiCol_Text, ImGui::ColorConvertU32ToFloat4(col::red));
@@ -2125,7 +2142,22 @@ static bool drawBoard() {
         snprintf(b, sizeof b, "ST7789는 240 × 320까지입니다. 지금 도면은 %d × %d입니다.", g.doc.resW, g.doc.resH);
         warn(b);
     }
-    if (g.doc.resW != g.doc.resH && (g.doc.resW > g.doc.resH) != ((bd.rotation & 1) != 0)) warn(g.doc.resW > g.doc.resH ? "가로 도면입니다. 방향 1이나 3을 고르세요." : "세로 도면입니다. 방향 0이나 2를 고르세요.");
+    if (bd.driver == 4) {
+        const bool land = (bd.rotation & 1) != 0;
+        const int ew = land ? 1024 : 600, eh = land ? 600 : 1024;
+        if (g.doc.resW != ew || g.doc.resH != eh) {
+            snprintf(b, sizeof b, "이 화면은 %d × %d입니다(방향 %d). 지금 도면은 %d × %d입니다.", ew, eh, bd.rotation, g.doc.resW, g.doc.resH);
+            warn(b);
+            snprintf(b, sizeof b, "도면을 %d × %d로 바꾸기", ew, eh);
+            if (textLink(b, col::red)) {
+                g.doc.resW = ew;
+                g.doc.resH = eh;
+                g.needFit = true;
+                done(b);
+            }
+        }
+    } else if (g.doc.resW != g.doc.resH && (g.doc.resW > g.doc.resH) != ((bd.rotation & 1) != 0))
+        warn(g.doc.resW > g.doc.resH ? "가로 도면입니다. 방향 1이나 3을 고르세요." : "세로 도면입니다. 방향 0이나 2를 고르세요.");
     if (bd.driver == 0) noteText("칩과 핀은 TFT_eSPI의 User_Setup.h를 따릅니다.");
     if (bd.driver == 1 || bd.driver == 2) {
         pins("SCK", &bd.sck, "MOSI", &bd.mosi);
@@ -2133,17 +2165,20 @@ static bool drawBoard() {
         pins("DC", &bd.dc, "RST", &bd.rst);
         pins("백라이트", &bd.bl, "MHz", &bd.mhz);
     }
-    if (bd.driver != 3) flag("색 반전", &bd.invert);
-    if (textLink("CYD 보드(ESP32-2432S028)로 채우기")) {
-        const int keepBuf = bd.buf, keepDbl = bd.dbl, keepPer = bd.period;
-        bd = Board();
-        bd.driver = 1; bd.touch = 1;
-        bd.buf = keepBuf; bd.dbl = keepDbl; bd.period = keepPer;
-        done("CYD");
+    if (bd.driver == 4) {
+        pins("RST", &bd.rst, "백라이트", &bd.bl);
+        noteText("7인치 1024 × 600, MIPI-DSI 2레인. LVGL은 내부 RAM에 그리고 DMA2D가 PSRAM 화면 버퍼로 옮깁니다. 방향 1이 기본 가로입니다.");
     }
+    if (bd.driver < 3) flag("색 반전", &bd.invert);
     gap(12);
     sectionHeader("02", "터치");
-    combo("방식", &bd.touch, 3, [](int i) { static const char* k[] = {"없음", "XPT2046 (핀 직접)", "TFT_eSPI 내장"}; return k[ImClamp(i, 0, 2)]; });
+    combo("방식", &bd.touch, 4, boardTouchKo);
+    if (bd.touch == 3) {
+        pins("SDA", &bd.tsda, "SCL", &bd.tscl);
+        pins("RST", &bd.trst, "INT", &bd.tint);
+        if (bd.driver != 4) flag("X·Y 바꿈", &bd.tswap);
+        noteText("다섯 손가락까지 읽습니다. 부품은 첫 손가락으로 움직이고, 나머지는 higenis_touch_point()로 읽습니다.");
+    }
     if (bd.touch == 1) {
         pins("CS", &bd.tcs, "IRQ", &bd.tirq);
         pins("SCK", &bd.tsck, "MOSI", &bd.tmosi);
@@ -2161,11 +2196,11 @@ static bool drawBoard() {
     gap(12);
     const int lines = boardBufLines(g.doc);
     const double kb = g.doc.resW * 2.0 * lines * (bd.dbl ? 2 : 1) / 1024.0;
-    snprintf(b, sizeof b, "RAM %.1f KB", kb);
+    snprintf(b, sizeof b, bd.driver == 4 ? "RAM %.1f KB + PSRAM 1.2 MB" : "RAM %.1f KB", kb);
     sectionHeader("03", "프레임", b);
-    combo("프레임 버퍼", &bd.buf, 4, boardBufKo);
+    combo("그리기 버퍼", &bd.buf, 4, boardBufKo);
     flag("두 장 쓰기", &bd.dbl);
-    flag("PSRAM에", &bd.psram);
+    flag("버퍼를 PSRAM에", &bd.psram);
     fieldLabel("화면 주기");
     snprintf(b, sizeof b, "%d ms  ·  초당 %d장", bd.period, 1000 / std::max(1, bd.period));
     if (comboField("##period", b, W - px(96))) {
@@ -2173,17 +2208,24 @@ static bool drawBoard() {
             snprintf(b, sizeof b, "%d ms  ·  초당 %d장", p, 1000 / p);
             if (ImGui::Selectable(b, p == bd.period) && p != bd.period) { bd.period = p; done("화면 주기"); }
         }
-        ImGui::EndCombo();
+        endComboField();
     }
-    if (!bd.psram && kb > 160) noteText("ESP32의 내부 RAM에는 클 수 있습니다. 버퍼를 줄이거나 PSRAM을 쓰세요.");
+    if (!bd.psram && kb > (bd.driver == 4 ? 480 : 160)) noteText("내부 RAM에는 클 수 있습니다. 버퍼를 줄이거나 PSRAM을 쓰세요.");
     gap(12);
     const bool need = usesSd(g.doc);
     sectionHeader("04", "SD 카드", need ? "그림이 씀" : bd.sd ? "씀" : "안 씀");
     if (!need) flag("카드 쓰기", &bd.sd);
     if (need || bd.sd) {
-        pins("CS", &bd.sdcs, "MHz", &bd.sdmhz);
-        pins("SCK", &bd.sdsck, "MOSI", &bd.sdmosi);
-        pins("MISO", &bd.sdmiso, nullptr, nullptr);
+        combo("연결", &bd.sdmmc, 2, [](int i) { return i ? "SDMMC 4비트 (ESP32-P4·S3)" : "SPI"; });
+        if (bd.sdmmc) {
+            pins("CLK", &bd.sdclk, "CMD", &bd.sdcmd);
+            pins("D0", &bd.sdd0, "D1", &bd.sdd1);
+            pins("D2", &bd.sdd2, "D3", &bd.sdd3);
+        } else {
+            pins("CS", &bd.sdcs, "MHz", &bd.sdmhz);
+            pins("SCK", &bd.sdsck, "MOSI", &bd.sdmosi);
+            pins("MISO", &bd.sdmiso, nullptr, nullptr);
+        }
         noteText("내보낸 sd 폴더 안의 것을 카드 맨 위에 복사하세요. LVGL에서는 S: 드라이브입니다.");
     }
     ImGui::PopStyleVar();
@@ -2715,7 +2757,7 @@ void drawModals() {
         hline(dl, L, wp.x + ws.x - px(32), top - px(10), col::ink);
         // 파일 목록
         float listW = px(g.genMode == 1 ? 210.f : 200.f);
-        const float boardW = g.genMode == 1 ? px(318) : 0.f;
+        const float boardW = g.genMode == 1 ? px(372) : 0.f;
         ImGui::SetCursorScreenPos(ImVec2(L, top));
         ImGui::BeginChild("##files", ImVec2(listW + px(8), wp.y + ws.y - px(72) - top), 0, 0);
         ImDrawList* mainDl = dl;

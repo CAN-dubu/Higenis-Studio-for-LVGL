@@ -196,6 +196,7 @@ bool  alignPicker(const char* id, int* a);
 int   fieldText(const char* id, std::string* s, float width, const char* hint = nullptr);   // 1 편집 중, 2 확정
 int   fieldMultiline(const char* id, std::string* s, float width, float height);
 bool  comboField(const char* id, const char* preview, float width);
+void  endComboField();   // comboField가 열렸을 때 EndCombo 대신
 void  tooltip(const char* text, const char* shortcut = nullptr);
 void  styleImGui();
 
