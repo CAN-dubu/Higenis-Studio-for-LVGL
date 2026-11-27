@@ -259,8 +259,12 @@ std::vector<GenFile> generateArduino(const Document& in, const std::string& rev)
         } else {
             map = b.tswap ? "    *ox = y;\n    *oy = x;\n" : "    *ox = x;\n    *oy = y;\n";
         }
-        c += "\n/* GT911 정전식 터치 (I²C). 다섯 손가락까지 읽는다 */\n#define TP_SDA " + N(b.tsda) + "\n#define TP_SCL " + N(b.tscl) + "\n#define TP_RST " + N(b.trst) + "\n#define TP_INT " + N(b.tint) + "\n\n"
-             "static uint8_t tp_addr = 0;   /* 0x5D 또는 0x14, 시작할 때 찾는다 */\nstatic uint8_t tp_n = 0;\nstatic int32_t tp_x[HIGENIS_TOUCH_MAX], tp_y[HIGENIS_TOUCH_MAX];\n\n"
+        // 칩이 내는 좌표 공간(돌리기 전). 칩에 적힌 해상도가 이와 다르면 늘려 맞춘다
+        const int tw = dsi ? pw : (b.tswap ? nh : nw), th = dsi ? ph_ : (b.tswap ? nw : nh);
+        c += "\n/* GT911 정전식 터치 (I²C). 다섯 손가락까지 읽는다 */\n#define TP_SDA " + N(b.tsda) + "\n#define TP_SCL " + N(b.tscl) + "\n#define TP_RST " + N(b.trst) + "\n#define TP_INT " + N(b.tint) + "\n"
+             "#define TP_W " + N(tw) + "   /* 칩 좌표를 이 크기로 늘린다 */\n#define TP_H " + N(th) + "\n\n"
+             "static uint8_t tp_addr = 0;   /* 0x5D 또는 0x14, 시작할 때 찾는다 */\nstatic uint8_t tp_n = 0;\nstatic int32_t tp_x[HIGENIS_TOUCH_MAX], tp_y[HIGENIS_TOUCH_MAX];\n"
+             "static int32_t tp_xmax = TP_W, tp_ymax = TP_H;   /* 칩에 적힌 해상도(0x8048). 화면과 다를 수 있다(JC1060P470은 800x480) */\n\n"
              "static bool tp_read(uint16_t reg, uint8_t * buf, uint8_t n)\n{\n    Wire.beginTransmission(tp_addr);\n    Wire.write((uint8_t)(reg >> 8));\n    Wire.write((uint8_t)reg);\n"
              "    if (Wire.endTransmission(false) != 0) return false;\n    if (Wire.requestFrom(tp_addr, n) != n) return false;\n    for (uint8_t i = 0; i < n; i++) buf[i] = (uint8_t)Wire.read();\n    return true;\n}\n"
              "static void tp_clear(void)\n{\n    Wire.beginTransmission(tp_addr);\n    Wire.write(0x81);\n    Wire.write(0x4E);\n    Wire.write(0x00);\n    Wire.endTransmission();\n}\n"
@@ -272,7 +276,9 @@ std::vector<GenFile> generateArduino(const Document& in, const std::string& rev)
              "    if (tp_addr && tp_read(0x814E, &st, 1) && (st & 0x80)) {\n        uint8_t n = st & 0x0F;\n        if (n > HIGENIS_TOUCH_MAX) n = HIGENIS_TOUCH_MAX;\n        uint8_t raw[8 * HIGENIS_TOUCH_MAX];\n"
              "        if (n && !tp_read(0x814F, raw, (uint8_t)(n * 8))) n = 0;\n"
              "        for (uint8_t i = 0; i < n; i++) {\n            const uint8_t * p = raw + i * 8;   /* 번호, x(2), y(2), 크기(2), 예비 */\n"
-             "            tp_map(p[1] | p[2] << 8, p[3] | p[4] << 8, &tp_x[i], &tp_y[i]);\n        }\n        tp_n = n;\n        tp_clear();\n    }\n"
+             "            int32_t x = (p[1] | p[2] << 8) * TP_W / tp_xmax, y = (p[3] | p[4] << 8) * TP_H / tp_ymax;\n"
+             "            if (x > TP_W - 1) x = TP_W - 1;\n            if (y > TP_H - 1) y = TP_H - 1;\n"
+             "            tp_map(x, y, &tp_x[i], &tp_y[i]);\n        }\n        tp_n = n;\n        tp_clear();\n    }\n"
              "    if (tp_n) {\n        last.x = tp_x[0];\n        last.y = tp_y[0];\n        data->state = LV_INDEV_STATE_PRESSED;\n    }\n    else data->state = LV_INDEV_STATE_RELEASED;\n    data->point = last;\n}\n\n"
              "static void touch_begin(void)\n{\n#if TP_RST >= 0\n    /* 리셋하면서 INT를 낮춰 두면 주소가 0x5D로 정해진다 */\n#if TP_INT >= 0\n    pinMode(TP_INT, OUTPUT);\n    digitalWrite(TP_INT, LOW);\n#endif\n"
              "    pinMode(TP_RST, OUTPUT);\n    digitalWrite(TP_RST, LOW);\n    delay(10);\n    digitalWrite(TP_RST, HIGH);\n    delay(10);\n#if TP_INT >= 0\n    pinMode(TP_INT, INPUT);\n#endif\n    delay(50);\n#endif\n"
@@ -282,7 +288,10 @@ std::vector<GenFile> generateArduino(const Document& in, const std::string& rev)
              "    for (int t = 0; t < 30 && !tp_addr; t++) {\n        for (uint8_t a : {0x5D, 0x14}) {\n            uint8_t id[3] = {0, 0, 0};\n            tp_addr = a;\n"
              "            if (tp_read(0x8140, id, 3) && id[0] == '9' && id[1] >= '0' && id[1] <= '9' && id[2] >= '0' && id[2] <= '9') break;\n"
              "            tp_addr = 0;\n        }\n        if (!tp_addr) delay(10);\n    }\n"
-             "    if (tp_addr) Serial.printf(\"Higenis: GT911 터치 0x%02X\\n\", tp_addr);\n"
+             "    uint8_t res[4];\n"
+             "    if (tp_addr && tp_read(0x8048, res, 4)) {\n        const int32_t rx = res[0] | res[1] << 8, ry = res[2] | res[3] << 8;\n"
+             "        if (rx > 0 && rx <= 4096 && ry > 0 && ry <= 4096) {\n            tp_xmax = rx;\n            tp_ymax = ry;\n        }\n    }\n"
+             "    if (tp_addr) Serial.printf(\"Higenis: GT911 터치 0x%02X (%dx%d -> %dx%d)\\n\", tp_addr, (int)tp_xmax, (int)tp_ymax, TP_W, TP_H);\n"
              "    else Serial.println(\"Higenis: GT911 터치를 찾을 수 없습니다 (SDA·SCL 핀 확인)\");\n}\n";
     }
     const bool touch = b.touch == 1 || (b.touch == 2 && b.driver == 0) || gt;
