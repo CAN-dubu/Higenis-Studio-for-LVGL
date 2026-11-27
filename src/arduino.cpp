@@ -276,8 +276,14 @@ std::vector<GenFile> generateArduino(const Document& in, const std::string& rev)
              "    if (tp_n) {\n        last.x = tp_x[0];\n        last.y = tp_y[0];\n        data->state = LV_INDEV_STATE_PRESSED;\n    }\n    else data->state = LV_INDEV_STATE_RELEASED;\n    data->point = last;\n}\n\n"
              "static void touch_begin(void)\n{\n#if TP_RST >= 0\n    /* 리셋하면서 INT를 낮춰 두면 주소가 0x5D로 정해진다 */\n#if TP_INT >= 0\n    pinMode(TP_INT, OUTPUT);\n    digitalWrite(TP_INT, LOW);\n#endif\n"
              "    pinMode(TP_RST, OUTPUT);\n    digitalWrite(TP_RST, LOW);\n    delay(10);\n    digitalWrite(TP_RST, HIGH);\n    delay(10);\n#if TP_INT >= 0\n    pinMode(TP_INT, INPUT);\n#endif\n    delay(50);\n#endif\n"
-             "    Wire.begin(TP_SDA, TP_SCL, 400000);\n    for (uint8_t a : {0x5D, 0x14}) {\n        Wire.beginTransmission(a);\n        if (Wire.endTransmission() == 0) {\n            tp_addr = a;\n            break;\n        }\n    }\n"
-             "    if (!tp_addr) Serial.println(\"Higenis: GT911 터치를 찾을 수 없습니다 (SDA·SCL 핀 확인)\");\n}\n";
+             "    Wire.begin(TP_SDA, TP_SCL, 400000);\n"
+             "    /* 대답만 보고 잡지 않는다: 같은 I²C에 시계 칩(0x14) 같은 다른 칩이 있다. 제품 번호(0x8140)가 '9xx'인지 본다.\n"
+             "       리셋 뒤 깨어나는 데 시간이 걸리므로 0.3초까지 다시 찾는다 */\n"
+             "    for (int t = 0; t < 30 && !tp_addr; t++) {\n        for (uint8_t a : {0x5D, 0x14}) {\n            uint8_t id[3] = {0, 0, 0};\n            tp_addr = a;\n"
+             "            if (tp_read(0x8140, id, 3) && id[0] == '9' && id[1] >= '0' && id[1] <= '9' && id[2] >= '0' && id[2] <= '9') break;\n"
+             "            tp_addr = 0;\n        }\n        if (!tp_addr) delay(10);\n    }\n"
+             "    if (tp_addr) Serial.printf(\"Higenis: GT911 터치 0x%02X\\n\", tp_addr);\n"
+             "    else Serial.println(\"Higenis: GT911 터치를 찾을 수 없습니다 (SDA·SCL 핀 확인)\");\n}\n";
     }
     const bool touch = b.touch == 1 || (b.touch == 2 && b.driver == 0) || gt;
 
